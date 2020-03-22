@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Persistence;
 
 namespace API
 {
@@ -17,6 +18,8 @@ namespace API
 
         public void ConfigureServices(IServiceCollection services)
         {
+            services.RegisterPersistence(Configuration);
+
             services.AddControllers();
         }
 
