@@ -1,3 +1,4 @@
+using Application;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -18,6 +19,7 @@ namespace API
 
         public void ConfigureServices(IServiceCollection services)
         {
+            services.RegisterApplication();
             services.RegisterPersistence(Configuration);
 
             services.AddControllers();
