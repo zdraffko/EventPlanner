@@ -5,6 +5,13 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Migrations\20200323100515_SeedEventTable.cs" />
+    <Compile Remove="Migrations\20200323100515_SeedEventTable.Designer.cs" />
+    <Compile Remove="Migrations\20200323100926_SeedEventTable.cs" />
+    <Compile Remove="Migrations\20200323100926_SeedEventTable.Designer.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="3.1.2" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="3.1.2">
       <PrivateAssets>all</PrivateAssets>
