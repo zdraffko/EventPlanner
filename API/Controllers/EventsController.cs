@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Application.Events.Commands.CreateEvent;
+using Application.Events.Commands.DeleteEvent;
 using Application.Events.Commands.UpdateEvent;
 using Application.Events.Queries.GetAllEventsList;
 using Application.Events.Queries.GetEvent;
@@ -44,7 +45,15 @@ namespace API.Controllers
 
             await Mediator.Send(command);
 
-            return NoContent();
+            return Ok();
+        }
+
+        [HttpDelete("{id}")]
+        public async Task<ActionResult> DeleteEvent(Guid id)
+        {
+            await Mediator.Send(new DeleteEventCommand { Id = id });
+
+            return Ok();
         }
     }
 }
