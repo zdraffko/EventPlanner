@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Application.Events.Commands.CreateEvent;
 using Application.Events.Queries.GetAllEventsList;
 using Application.Events.Queries.GetEvent;
 using Domain.Entities;
+using Microsoft.AspNetCore.Http.Extensions;
 using Microsoft.AspNetCore.Mvc;
 
 namespace API.Controllers
@@ -15,7 +17,7 @@ namespace API.Controllers
         {
             var events = await Mediator.Send(new GetAllEventsListQuery());
 
-            return base.Ok(events);
+            return Ok(events);
         }
 
         [HttpGet("{id}")]
@@ -23,7 +25,15 @@ namespace API.Controllers
         {
             var targetEvent = await Mediator.Send(new GetEventQuery { Id = id });
 
-            return base.Ok(targetEvent);
+            return Ok(targetEvent);
+        }
+
+        [HttpPost]
+        public async Task<ActionResult<Guid>> CreateEvent(CreateEventCommand command)
+        {
+            var eventId = await Mediator.Send(command);
+
+            return Created(new Uri($"{Request.GetEncodedUrl()}{eventId}"), eventId);
         }
     }
 }
