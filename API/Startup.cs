@@ -22,6 +22,18 @@ namespace API
             services.RegisterApplication();
             services.RegisterPersistence(Configuration);
 
+            services.AddCors(options =>
+            {
+                options.AddPolicy("EventPlannerCors",
+                    policy =>
+                    {
+                        policy
+                            .WithOrigins("http://localhost:3000")
+                            .AllowAnyHeader()
+                            .AllowAnyMethod();
+                    });
+            });
+
             services.AddControllers();
         }
 
@@ -37,6 +49,8 @@ namespace API
             app.UseRouting();
 
             app.UseAuthorization();
+
+            app.UseCors("EventPlannerCors");
 
             app.UseEndpoints(endpoints =>
             {
