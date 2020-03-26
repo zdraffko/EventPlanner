@@ -1,7 +1,11 @@
 import React from "react";
 import { Menu, Button, Container } from "semantic-ui-react";
 
-const NavBar: React.FC = () => (
+interface IProps {
+  handleOpenCreateEventForm: () => void;
+}
+
+const NavBar: React.FC<IProps> = ({ handleOpenCreateEventForm }) => (
   <Menu inverted fixed="top">
     <Container>
       <Menu.Item header>
@@ -14,7 +18,11 @@ const NavBar: React.FC = () => (
       </Menu.Item>
       <Menu.Item name="Events" />
       <Menu.Item>
-        <Button color="orange" content="Create Event" />
+        <Button
+          onClick={handleOpenCreateEventForm}
+          color="orange"
+          content="Create Event"
+        />
       </Menu.Item>
     </Container>
   </Menu>
