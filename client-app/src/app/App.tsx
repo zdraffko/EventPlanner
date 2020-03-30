@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from "react";
-import axios from "axios";
+import agent from "./api/agent";
 import { Container } from "semantic-ui-react";
 import IEvent from "./models/eventModel";
-import { EVENTS_BASE_URL } from "./constants/apiConstants";
 import NavBar from "./components/NavBar";
 import EventsDashboard from "./components/events/dashboard/EventsDashboard";
 
@@ -27,24 +26,30 @@ const App: React.FC = () => {
   };
 
   const handleCreateEvent = (event: IEvent) => {
-    setSelectedEvent(event);
-    setEvents([...events, event]);
-    setIsInEditMode(false);
+    agent.events.create(event).then(() => {
+      setSelectedEvent(event);
+      setEvents([...events, event]);
+      setIsInEditMode(false);
+    });
   };
 
   const handleEditEvent = (event: IEvent) => {
-    setSelectedEvent(event);
-    setEvents([...events.filter(e => e.id !== event.id), event]);
-    setIsInEditMode(false);
+    agent.events.update(event).then(() => {
+      setSelectedEvent(event);
+      setEvents([...events.filter(e => e.id !== event.id), event]);
+      setIsInEditMode(false);
+    });
   };
 
   const handleDeleteEvent = (id: string) => {
-    setEvents(events.filter(event => event.id !== id));
+    agent.events
+      .delete(id)
+      .then(() => setEvents(events.filter(event => event.id !== id)));
   };
 
   useEffect(() => {
-    axios.get<IEvent[]>(EVENTS_BASE_URL).then(response => {
-      const events = response.data;
+    agent.events.getAll().then(response => {
+      const events = response;
 
       events.forEach(event => {
         event.date = event.date.split(".")[0];
