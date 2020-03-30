@@ -1,4 +1,4 @@
-import React from "react";
+import React, { SyntheticEvent } from "react";
 import { Item, Segment } from "semantic-ui-react";
 import IEvent from "../../../../models/eventModel";
 import EventItem from "./EventItem";
@@ -6,13 +6,17 @@ import EventItem from "./EventItem";
 interface IProps {
   events: IEvent[];
   handleEventSelect: (id: string) => void;
-  handleDeleteEvent: (id: string) => void;
+  handleDeleteEvent: (id: string, e: SyntheticEvent<HTMLButtonElement>) => void;
+  isElementLoading: boolean;
+  elementLoadingTarget: string;
 }
 
 const EventList: React.FC<IProps> = ({
   events,
   handleEventSelect,
-  handleDeleteEvent
+  handleDeleteEvent,
+  isElementLoading,
+  elementLoadingTarget
 }) => {
   return (
     <Segment clearing>
@@ -23,6 +27,8 @@ const EventList: React.FC<IProps> = ({
             event={event}
             handleEventSelect={handleEventSelect}
             handleDeleteEvent={handleDeleteEvent}
+            isElementLoading={isElementLoading}
+            elementLoadingTarget={elementLoadingTarget}
           />
         ))}
       </Item.Group>

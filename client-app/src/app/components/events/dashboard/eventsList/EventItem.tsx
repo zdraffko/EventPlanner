@@ -1,17 +1,21 @@
-import React from "react";
+import React, { SyntheticEvent } from "react";
 import { Item, Button, Label } from "semantic-ui-react";
 import IEvent from "../../../../models/eventModel";
 
 interface IProps {
   event: IEvent;
   handleEventSelect: (id: string) => void;
-  handleDeleteEvent: (id: string) => void;
+  handleDeleteEvent: (id: string, e: SyntheticEvent<HTMLButtonElement>) => void;
+  isElementLoading: boolean;
+  elementLoadingTarget: string;
 }
 
 const EventItem: React.FC<IProps> = ({
   event,
   handleEventSelect,
-  handleDeleteEvent
+  handleDeleteEvent,
+  isElementLoading,
+  elementLoadingTarget
 }) => (
   <Item>
     <Item.Content>
@@ -31,7 +35,9 @@ const EventItem: React.FC<IProps> = ({
           color="orange"
         />
         <Button
-          onClick={() => handleDeleteEvent(event.id)}
+          name={event.id}
+          loading={isElementLoading && elementLoadingTarget === event.id}
+          onClick={e => handleDeleteEvent(event.id, e)}
           floated="right"
           content="Delete"
           color="red"

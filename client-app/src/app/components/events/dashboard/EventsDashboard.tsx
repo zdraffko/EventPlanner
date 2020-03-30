@@ -1,4 +1,4 @@
-import React from "react";
+import React, { SyntheticEvent } from "react";
 import { Grid } from "semantic-ui-react";
 import IEvent from "../../../models/eventModel";
 import EventsList from "./eventsList/EventsList";
@@ -14,7 +14,9 @@ interface IProps {
   handleIsInEditMode: (isInEditMode: boolean) => void;
   handleCreateEvent: (event: IEvent) => void;
   handleEditEvent: (event: IEvent) => void;
-  handleDeleteEvent: (id: string) => void;
+  handleDeleteEvent: (id: string, e: SyntheticEvent<HTMLButtonElement>) => void;
+  isElementLoading: boolean;
+  elementLoadingTarget: string;
 }
 
 const EventsDashboard: React.FC<IProps> = ({
@@ -26,7 +28,9 @@ const EventsDashboard: React.FC<IProps> = ({
   handleIsInEditMode,
   handleCreateEvent,
   handleEditEvent,
-  handleDeleteEvent
+  handleDeleteEvent,
+  isElementLoading,
+  elementLoadingTarget
 }) => {
   return (
     <Grid>
@@ -35,6 +39,8 @@ const EventsDashboard: React.FC<IProps> = ({
           events={events}
           handleEventSelect={handleEventSelect}
           handleDeleteEvent={handleDeleteEvent}
+          isElementLoading={isElementLoading}
+          elementLoadingTarget={elementLoadingTarget}
         />
       </Grid.Column>
       <Grid.Column width={6}>
@@ -52,6 +58,7 @@ const EventsDashboard: React.FC<IProps> = ({
             handleIsInEditMode={handleIsInEditMode}
             handleCreateEvent={handleCreateEvent}
             handleEditEvent={handleEditEvent}
+            isElementLoading={isElementLoading}
           />
         )}
       </Grid.Column>

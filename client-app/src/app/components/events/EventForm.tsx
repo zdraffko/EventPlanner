@@ -7,13 +7,15 @@ interface IProps {
   handleIsInEditMode: (isInEditMode: boolean) => void;
   handleCreateEvent: (event: IEvent) => void;
   handleEditEvent: (event: IEvent) => void;
+  isElementLoading: boolean;
 }
 
 const EventForm: React.FC<IProps> = ({
   selectedEvent,
   handleIsInEditMode,
   handleCreateEvent,
-  handleEditEvent
+  handleEditEvent,
+  isElementLoading
 }) => {
   const initializeEvent = () => {
     if (selectedEvent) {
@@ -89,7 +91,13 @@ const EventForm: React.FC<IProps> = ({
           name="venue"
           value={event.venue}
         ></Form.Input>
-        <Button floated="right" color="orange" type="submit" content="Submit" />
+        <Button
+          floated="right"
+          color="orange"
+          type="submit"
+          content="Submit"
+          loading={isElementLoading}
+        />
         <Button
           onClick={() => handleIsInEditMode(false)}
           floated="right"
