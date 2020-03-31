@@ -8,21 +8,38 @@ class EventStore {
   events: IEvent[] = [];
 
   @observable
+  selectedEvent: IEvent | undefined;
+
+  @observable
+  isInEditMode = false;
+
+  @observable
   isGlobalLoading = false;
 
   @action
-  loadAllEvents = () => {
+  loadAllEvents = async () => {
     this.isGlobalLoading = true;
 
-    agent.events
-      .getAll()
-      .then(events => {
-        events.forEach(event => {
-          event.date = event.date.split(".")[0];
-          this.events.push(event);
-        });
-      })
-      .finally(() => (this.isGlobalLoading = false));
+    const events = await agent.events.getAll();
+
+    events.forEach(event => {
+      event.date = event.date.split(".")[0];
+      this.events.push(event);
+    });
+
+    this.isGlobalLoading = false;
+  };
+
+  @action
+  selectEvent = (id: string) => {
+    this.selectedEvent = this.events.find(event => event.id === id);
+    this.isInEditMode = true;
+  };
+
+  @action
+  openCreateEventForm = () => {
+    this.selectedEvent = undefined;
+    this.isInEditMode = true;
   };
 }
 

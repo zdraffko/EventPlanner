@@ -1,10 +1,11 @@
 import React, { SyntheticEvent } from "react";
 import { Item, Button, Label } from "semantic-ui-react";
 import IEvent from "../../../../models/eventModel";
+import { observer } from "mobx-react-lite";
 
 interface IProps {
   event: IEvent;
-  handleEventSelect: (id: string) => void;
+  selectEvent: (id: string) => void;
   handleDeleteEvent: (id: string, e: SyntheticEvent<HTMLButtonElement>) => void;
   isElementLoading: boolean;
   elementLoadingTarget: string;
@@ -12,7 +13,7 @@ interface IProps {
 
 const EventItem: React.FC<IProps> = ({
   event,
-  handleEventSelect,
+  selectEvent,
   handleDeleteEvent,
   isElementLoading,
   elementLoadingTarget
@@ -29,7 +30,7 @@ const EventItem: React.FC<IProps> = ({
       </Item.Description>
       <Item.Extra>
         <Button
-          onClick={() => handleEventSelect(event.id)}
+          onClick={() => selectEvent(event.id)}
           floated="right"
           content="View"
           color="orange"
@@ -48,4 +49,4 @@ const EventItem: React.FC<IProps> = ({
   </Item>
 );
 
-export default EventItem;
+export default observer(EventItem);

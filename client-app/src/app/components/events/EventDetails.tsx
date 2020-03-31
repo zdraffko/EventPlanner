@@ -1,6 +1,7 @@
 import React from "react";
 import { Card, Image, Button } from "semantic-ui-react";
 import IEvent from "../../models/eventModel";
+import { observer } from "mobx-react-lite";
 
 interface IProps {
   selectedEvent: IEvent;
@@ -45,4 +46,4 @@ const EventDetails: React.FC<IProps> = ({
   </Card>
 );
 
-export default EventDetails;
+export default observer(EventDetails);

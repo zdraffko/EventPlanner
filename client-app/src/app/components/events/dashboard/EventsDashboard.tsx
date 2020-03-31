@@ -1,17 +1,14 @@
-import React, { SyntheticEvent } from "react";
+import React, { SyntheticEvent, useContext } from "react";
 import { observer } from "mobx-react-lite";
 import { Grid } from "semantic-ui-react";
 import IEvent from "../../../models/eventModel";
 import EventsList from "./eventsList/EventsList";
 import EventDetails from "../EventDetails";
 import EventForm from "../EventForm";
+import eventStore from "../../../stores/eventStore";
 
 interface IProps {
-  events: IEvent[];
-  selectedEvent: IEvent | null;
-  handleEventSelect: (id: string) => void;
   handleEventUnselect: () => void;
-  isInEditMode: boolean;
   handleIsInEditMode: (isInEditMode: boolean) => void;
   handleCreateEvent: (event: IEvent) => void;
   handleEditEvent: (event: IEvent) => void;
@@ -21,11 +18,7 @@ interface IProps {
 }
 
 const EventsDashboard: React.FC<IProps> = ({
-  events,
-  selectedEvent,
-  handleEventSelect,
   handleEventUnselect,
-  isInEditMode,
   handleIsInEditMode,
   handleCreateEvent,
   handleEditEvent,
@@ -33,12 +26,12 @@ const EventsDashboard: React.FC<IProps> = ({
   isElementLoading,
   elementLoadingTarget
 }) => {
+  const { selectedEvent, isInEditMode } = useContext(eventStore);
+
   return (
     <Grid>
       <Grid.Column width={10}>
         <EventsList
-          events={events}
-          handleEventSelect={handleEventSelect}
           handleDeleteEvent={handleDeleteEvent}
           isElementLoading={isElementLoading}
           elementLoadingTarget={elementLoadingTarget}
