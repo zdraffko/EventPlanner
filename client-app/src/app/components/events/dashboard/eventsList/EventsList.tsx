@@ -1,4 +1,5 @@
 import React, { SyntheticEvent } from "react";
+import { observer } from "mobx-react-lite";
 import { Item, Segment } from "semantic-ui-react";
 import IEvent from "../../../../models/eventModel";
 import EventItem from "./EventItem";
@@ -36,4 +37,4 @@ const EventList: React.FC<IProps> = ({
   );
 };
 
-export default EventList;
+export default observer(EventList);

@@ -1,7 +1,9 @@
-import React, { useState, useEffect, SyntheticEvent } from "react";
-import agent from "./api/agent";
+import React, { useState, useEffect, SyntheticEvent, useContext } from "react";
+import { observer } from "mobx-react-lite";
 import { Container } from "semantic-ui-react";
+import agent from "./api/agent";
 import IEvent from "./models/eventModel";
+import EventStore from "./stores/eventStore";
 import NavBar from "./components/layout/NavBar";
 import EventsDashboard from "./components/events/dashboard/EventsDashboard";
 import LoaderComponent from "./components/layout/LoaderComponent";
@@ -10,9 +12,10 @@ const App: React.FC = () => {
   const [events, setEvents] = useState<IEvent[]>([]);
   const [selectedEvent, setSelectedEvent] = useState<IEvent | null>(null);
   const [isInEditMode, setIsInEditMode] = useState(false);
-  const [isGlobalLoading, setIsGlobalLoading] = useState(true);
   const [isElementLoading, setIsElementLoading] = useState(false);
   const [elementLoadingTarget, setElementLoadingTarget] = useState("");
+
+  const eventStore = useContext(EventStore);
 
   const handleEventSelect = (id: string) => {
     setSelectedEvent(events.filter(event => event.id === id)[0]);
@@ -69,28 +72,17 @@ const App: React.FC = () => {
   };
 
   useEffect(() => {
-    agent.events
-      .getAll()
-      .then(response => {
-        const events = response;
+    eventStore.loadAllEvents();
+  }, [eventStore]);
 
-        events.forEach(event => {
-          event.date = event.date.split(".")[0];
-        });
-
-        setEvents(events);
-      })
-      .then(() => setIsGlobalLoading(false));
-  }, []);
-
-  if (isGlobalLoading) return <LoaderComponent />;
+  if (eventStore.isGlobalLoading) return <LoaderComponent />;
 
   return (
     <>
       <NavBar handleOpenCreateEventForm={handleOpenCreateEventForm} />
       <Container style={{ marginTop: "7em" }}>
         <EventsDashboard
-          events={events}
+          events={eventStore.events}
           selectedEvent={selectedEvent}
           handleEventSelect={handleEventSelect}
           handleEventUnselect={handleEventUnselect}
@@ -107,4 +99,4 @@ const App: React.FC = () => {
   );
 };
 
-export default App;
+export default observer(App);

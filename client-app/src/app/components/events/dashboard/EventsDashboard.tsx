@@ -1,4 +1,5 @@
 import React, { SyntheticEvent } from "react";
+import { observer } from "mobx-react-lite";
 import { Grid } from "semantic-ui-react";
 import IEvent from "../../../models/eventModel";
 import EventsList from "./eventsList/EventsList";
@@ -66,4 +67,4 @@ const EventsDashboard: React.FC<IProps> = ({
   );
 };
 
-export default EventsDashboard;
+export default observer(EventsDashboard);
