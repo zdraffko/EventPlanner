@@ -35,7 +35,7 @@ namespace API.Controllers
         {
             var eventId = await Mediator.Send(command);
 
-            return Created(new Uri($"{Request.GetEncodedUrl()}{eventId}"), eventId);
+            return Created(new Uri($"{Request.GetEncodedUrl()}/{eventId}"), eventId);
         }
 
         [HttpPut("{id}")]

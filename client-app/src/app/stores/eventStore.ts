@@ -1,11 +1,12 @@
-import { observable, action } from "mobx";
+import { observable, action, computed, configure, runInAction } from "mobx";
 import { createContext, SyntheticEvent } from "react";
 import agent from "../api/agent";
 import IEvent from "../models/eventModel";
 
+configure({ enforceActions: "always" });
 class EventStore {
   @observable
-  events: IEvent[] = [];
+  events: Map<string, IEvent> = new Map();
 
   @observable
   selectedEvent: IEvent | undefined;
@@ -22,18 +23,27 @@ class EventStore {
   @observable
   elementLoadingTarget = "";
 
+  @computed
+  get eventsByDateArray() {
+    return Array.from(this.events.values()).sort(
+      (eOne, eTwo) => Date.parse(eOne.date) - Date.parse(eTwo.date)
+    );
+  }
+
   @action
   loadAllEvents = async () => {
     this.isGlobalLoading = true;
 
     const events = await agent.events.getAll();
 
-    events.forEach(event => {
-      event.date = event.date.split(".")[0];
-      this.events.push(event);
-    });
+    runInAction(() => {
+      events.forEach(event => {
+        event.date = event.date.split(".")[0];
+        this.events.set(event.id, event);
+      });
 
-    this.isGlobalLoading = false;
+      this.isGlobalLoading = false;
+    });
   };
 
   @action
@@ -42,10 +52,13 @@ class EventStore {
 
     event.id = await agent.events.create(event);
 
-    this.events.push(event);
-    this.selectedEvent = event;
-    this.isInEditMode = false;
-    this.isElementLoading = false;
+    runInAction(() => {
+      this.events.set(event.id, event);
+
+      this.selectedEvent = event;
+      this.isInEditMode = false;
+      this.isElementLoading = false;
+    });
   };
 
   @action
@@ -54,11 +67,13 @@ class EventStore {
 
     await agent.events.update(event);
 
-    this.events = [...this.events.filter(e => e.id !== event.id), event];
+    runInAction(() => {
+      this.events.set(event.id, event);
 
-    this.selectedEvent = event;
-    this.isInEditMode = false;
-    this.isElementLoading = false;
+      this.selectedEvent = event;
+      this.isInEditMode = false;
+      this.isElementLoading = false;
+    });
   };
 
   @action
@@ -68,15 +83,17 @@ class EventStore {
 
     await agent.events.delete(id);
 
-    this.events = this.events.filter(event => event.id !== id);
+    runInAction(() => {
+      this.events.delete(id);
 
-    this.isElementLoading = false;
-    this.elementLoadingTarget = "";
+      this.isElementLoading = false;
+      this.elementLoadingTarget = "";
+    });
   };
 
   @action
   selectEvent = (id: string) => {
-    this.selectedEvent = this.events.find(event => event.id === id);
+    this.selectedEvent = this.events.get(id);
     this.isInEditMode = false;
   };
 
@@ -91,7 +108,7 @@ class EventStore {
 
   @action
   openUpdateEventForm = (id: string) => {
-    this.selectedEvent = this.events.find(event => event.id === id);
+    this.selectedEvent = this.events.get(id);
     this.isInEditMode = true;
   };
 

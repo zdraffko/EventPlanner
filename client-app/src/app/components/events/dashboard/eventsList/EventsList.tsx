@@ -5,12 +5,12 @@ import eventStore from "../../../../stores/eventStore";
 import EventItem from "./EventItem";
 
 const EventList: React.FC = () => {
-  const { events } = useContext(eventStore);
+  const { eventsByDateArray } = useContext(eventStore);
 
   return (
     <Segment clearing>
       <Item.Group divided>
-        {events.map(event => (
+        {eventsByDateArray.map(event => (
           <EventItem key={event.id} event={event} />
         ))}
       </Item.Group>
