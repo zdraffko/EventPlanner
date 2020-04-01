@@ -16,7 +16,7 @@ const eventsUrl = "/events";
 const events = {
   getAll: (): Promise<IEvent[]> => requests.get(eventsUrl),
   getEvent: (id: string) => requests.get(`${eventsUrl}/${id}`),
-  create: (event: IEvent) => requests.post(eventsUrl, event),
+  create: (event: IEvent): Promise<string> => requests.post(eventsUrl, event),
   update: (event: IEvent) => requests.put(`${eventsUrl}/${event.id}`, event),
   delete: (id: string) => requests.delete(`${eventsUrl}/${id}`)
 };

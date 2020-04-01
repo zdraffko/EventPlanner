@@ -1,6 +1,7 @@
 import React, { useContext } from "react";
 import { Menu, Button, Container } from "semantic-ui-react";
 import eventStore from "../../stores/eventStore";
+import { observer } from "mobx-react-lite";
 
 const NavBar: React.FC = () => {
   const { openCreateEventForm } = useContext(eventStore);
@@ -29,4 +30,4 @@ const NavBar: React.FC = () => {
   );
 };
 
-export default NavBar;
+export default observer(NavBar);

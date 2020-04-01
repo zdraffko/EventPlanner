@@ -1,22 +1,18 @@
-import React, { useState, FormEvent } from "react";
+import React, { useState, FormEvent, useContext } from "react";
 import { Segment, Form, Button } from "semantic-ui-react";
 import IEvent from "../../models/eventModel";
+import { observer } from "mobx-react-lite";
+import eventStore from "../../stores/eventStore";
 
-interface IProps {
-  selectedEvent: IEvent;
-  handleIsInEditMode: (isInEditMode: boolean) => void;
-  handleCreateEvent: (event: IEvent) => void;
-  handleEditEvent: (event: IEvent) => void;
-  isElementLoading: boolean;
-}
+const EventForm: React.FC = () => {
+  const {
+    createEvent,
+    selectedEvent,
+    isElementLoading,
+    updateEvent,
+    closeEventForm
+  } = useContext(eventStore);
 
-const EventForm: React.FC<IProps> = ({
-  selectedEvent,
-  handleIsInEditMode,
-  handleCreateEvent,
-  handleEditEvent,
-  isElementLoading
-}) => {
   const initializeEvent = () => {
     if (selectedEvent) {
       return selectedEvent;
@@ -44,9 +40,9 @@ const EventForm: React.FC<IProps> = ({
 
   const handleFormSubmit = () => {
     if (event.id.length === 0) {
-      handleCreateEvent(event);
+      createEvent(event);
     } else {
-      handleEditEvent(event);
+      updateEvent(event);
     }
   };
 
@@ -99,7 +95,7 @@ const EventForm: React.FC<IProps> = ({
           loading={isElementLoading}
         />
         <Button
-          onClick={() => handleIsInEditMode(false)}
+          onClick={closeEventForm}
           floated="right"
           type="button"
           content="Cancel"
@@ -109,4 +105,4 @@ const EventForm: React.FC<IProps> = ({
   );
 };
 
-export default EventForm;
+export default observer(EventForm);
