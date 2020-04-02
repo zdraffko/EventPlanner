@@ -1,5 +1,7 @@
 import React, { useContext } from "react";
+import { Link } from "react-router-dom";
 import { Item, Button, Label } from "semantic-ui-react";
+import * as NavConstants from "../../../../constants/navigationalConstants";
 import IEvent from "../../../../models/eventModel";
 import { observer } from "mobx-react-lite";
 import eventStore from "../../../../stores/eventStore";
@@ -9,12 +11,9 @@ interface IProps {
 }
 
 const EventItem: React.FC<IProps> = ({ event }) => {
-  const {
-    selectEvent,
-    isElementLoading,
-    deleteEvent,
-    elementLoadingTarget
-  } = useContext(eventStore);
+  const { isElementLoading, deleteEvent, elementLoadingTarget } = useContext(
+    eventStore
+  );
 
   return (
     <Item>
@@ -29,7 +28,8 @@ const EventItem: React.FC<IProps> = ({ event }) => {
         </Item.Description>
         <Item.Extra>
           <Button
-            onClick={() => selectEvent(event.id)}
+            as={Link}
+            to={`${NavConstants.EVENTS}/${event.id}`}
             floated="right"
             content="View"
             color="orange"

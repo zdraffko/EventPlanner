@@ -1,15 +1,14 @@
-import React, { useContext } from "react";
+import React from "react";
+import { NavLink } from "react-router-dom";
 import { Menu, Button, Container } from "semantic-ui-react";
-import eventStore from "../../stores/eventStore";
 import { observer } from "mobx-react-lite";
+import * as NavConstants from "../../constants/navigationalConstants";
 
 const NavBar: React.FC = () => {
-  const { openCreateEventForm } = useContext(eventStore);
-
   return (
     <Menu inverted fixed="top">
       <Container>
-        <Menu.Item header>
+        <Menu.Item header as={NavLink} exact to={NavConstants.HOME}>
           <img
             src="/assets/logo.png"
             alt="logo"
@@ -17,10 +16,11 @@ const NavBar: React.FC = () => {
           />
           Event Planner
         </Menu.Item>
-        <Menu.Item name="Events" />
+        <Menu.Item name="Events" as={NavLink} to={NavConstants.EVENTS} />
         <Menu.Item>
           <Button
-            onClick={openCreateEventForm}
+            as={NavLink}
+            to={NavConstants.CREATE_EVENT}
             color="orange"
             content="Create Event"
           />

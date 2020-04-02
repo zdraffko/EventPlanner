@@ -47,6 +47,24 @@ class EventStore {
   };
 
   @action
+  loadEvent = async (id: string) => {
+    let event = this.events.get(id);
+
+    if (event) {
+      this.selectedEvent = event;
+    } else {
+      this.isGlobalLoading = true;
+
+      event = await agent.events.getEvent(id);
+
+      runInAction(() => {
+        this.selectedEvent = event;
+        this.isGlobalLoading = false;
+      });
+    }
+  };
+
+  @action
   createEvent = async (event: IEvent) => {
     this.isElementLoading = true;
 

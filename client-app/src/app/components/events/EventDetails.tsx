@@ -1,14 +1,27 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect } from "react";
+import { useParams } from "react-router-dom";
 import { Card, Image, Button } from "semantic-ui-react";
 import { observer } from "mobx-react-lite";
 import eventStore from "../../stores/eventStore";
+import LoaderComponent from "../layout/LoaderComponent";
 
 const EventDetails: React.FC = () => {
-  const { selectedEvent, unselectEvent, openUpdateEventForm } = useContext(
-    eventStore
-  );
+  const {
+    selectedEvent,
+    unselectEvent,
+    openUpdateEventForm,
+    loadEvent,
+    isGlobalLoading
+  } = useContext(eventStore);
 
-  if (selectedEvent === undefined) return <h1>Event not found</h1>;
+  const { id } = useParams();
+
+  useEffect(() => {
+    loadEvent(id!);
+  }, [id, loadEvent]);
+
+  if (isGlobalLoading || !selectedEvent)
+    return <LoaderComponent content="Loading Event..." />;
 
   return (
     <Card fluid>
