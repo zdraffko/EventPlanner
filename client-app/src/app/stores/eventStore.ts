@@ -22,10 +22,25 @@ class EventStore {
   elementLoadingTarget = "";
 
   @computed
-  get eventsByDateArray() {
-    return Array.from(this.events.values()).sort(
+  get eventsGroupedByDate() {
+    const eventsByDate = Array.from(this.events.values()).sort(
       (eOne, eTwo) => Date.parse(eOne.date) - Date.parse(eTwo.date)
     );
+    const groupedEvents = new Map<string, IEvent[]>();
+
+    eventsByDate.forEach(event => {
+      const date = event.date.split("T")[0];
+      const currentDateEvents = groupedEvents.get(date);
+
+      if (currentDateEvents) {
+        currentDateEvents.push(event);
+        groupedEvents.set(date, currentDateEvents);
+      } else {
+        groupedEvents.set(date, [event]);
+      }
+    });
+
+    return Array.from(groupedEvents);
   }
 
   @action
