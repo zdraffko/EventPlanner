@@ -1,6 +1,6 @@
 import React, { useState, FormEvent, useContext, useEffect } from "react";
 import { useParams, useHistory } from "react-router-dom";
-import { Segment, Form, Button } from "semantic-ui-react";
+import { Segment, Form, Button, Grid } from "semantic-ui-react";
 import IEvent from "../../models/eventModel";
 import * as NavConstants from "../../constants/navigationalConstants";
 import { observer } from "mobx-react-lite";
@@ -55,61 +55,65 @@ const EventForm: React.FC = () => {
   };
 
   return (
-    <Segment clearing>
-      <Form onSubmit={handleFormSubmit}>
-        <Form.Input
-          onChange={handleInputChange}
-          placeholder="Title"
-          name="title"
-          value={event.title}
-        ></Form.Input>
-        <Form.TextArea
-          onChange={handleInputChange}
-          rows={2}
-          placeholder="Description"
-          name="description"
-          value={event.description}
-        ></Form.TextArea>
-        <Form.Input
-          onChange={handleInputChange}
-          placeholder="Category"
-          name="category"
-          value={event.category}
-        ></Form.Input>
-        <Form.Input
-          onChange={handleInputChange}
-          placeholder="Date"
-          name="date"
-          type="datetime-local"
-          value={event.date}
-        ></Form.Input>
-        <Form.Input
-          onChange={handleInputChange}
-          placeholder="City"
-          name="city"
-          value={event.city}
-        ></Form.Input>
-        <Form.Input
-          onChange={handleInputChange}
-          placeholder="Venue"
-          name="venue"
-          value={event.venue}
-        ></Form.Input>
-        <Button
-          floated="right"
-          color="orange"
-          type="submit"
-          content="Submit"
-          loading={isElementLoading}
-        />
-        <Button
-          onClick={() => browserHistory.push(NavConstants.EVENTS)}
-          floated="right"
-          type="button"
-          content="Cancel"
-        />
-      </Form>
-    </Segment>
+    <Grid>
+      <Grid.Column width={10}>
+        <Segment clearing>
+          <Form onSubmit={handleFormSubmit}>
+            <Form.Input
+              onChange={handleInputChange}
+              placeholder="Title"
+              name="title"
+              value={event.title}
+            ></Form.Input>
+            <Form.TextArea
+              onChange={handleInputChange}
+              rows={2}
+              placeholder="Description"
+              name="description"
+              value={event.description}
+            ></Form.TextArea>
+            <Form.Input
+              onChange={handleInputChange}
+              placeholder="Category"
+              name="category"
+              value={event.category}
+            ></Form.Input>
+            <Form.Input
+              onChange={handleInputChange}
+              placeholder="Date"
+              name="date"
+              type="datetime-local"
+              value={event.date}
+            ></Form.Input>
+            <Form.Input
+              onChange={handleInputChange}
+              placeholder="City"
+              name="city"
+              value={event.city}
+            ></Form.Input>
+            <Form.Input
+              onChange={handleInputChange}
+              placeholder="Venue"
+              name="venue"
+              value={event.venue}
+            ></Form.Input>
+            <Button
+              floated="right"
+              color="orange"
+              type="submit"
+              content="Submit"
+              loading={isElementLoading}
+            />
+            <Button
+              onClick={() => browserHistory.push(NavConstants.EVENTS)}
+              floated="right"
+              type="button"
+              content="Cancel"
+            />
+          </Form>
+        </Segment>
+      </Grid.Column>
+    </Grid>
   );
 };
 

@@ -7,24 +7,38 @@ import NavBar from "./components/layout/NavBar";
 import EventsDashboard from "./components/events/dashboard/EventsDashboard";
 import Home from "./components/layout/Home";
 import EventForm from "./components/events/EventForm";
-import EventDetails from "./components/events/EventDetails";
+import EventDetails from "./components/events/details/EventDetails";
 
 const App: React.FC = () => {
   const location = useLocation();
 
   return (
     <>
-      <NavBar />
-      <Container style={{ marginTop: "7em" }}>
-        <Route exact path={NavConstants.HOME} component={Home} />
-        <Route exact path={NavConstants.EVENTS} component={EventsDashboard} />
-        <Route path={NavConstants.EVENT_DETAILS} component={EventDetails} />
-        <Route
-          key={location.key!}
-          path={[NavConstants.CREATE_EVENT, NavConstants.UPDATE_EVENT]}
-          component={EventForm}
-        />
-      </Container>
+      <Route exact path={NavConstants.HOME} component={Home} />
+      <Route
+        path="/(.+)"
+        render={() => (
+          <>
+            <NavBar />
+            <Container style={{ marginTop: "7em" }}>
+              <Route
+                exact
+                path={NavConstants.EVENTS}
+                component={EventsDashboard}
+              />
+              <Route
+                path={NavConstants.EVENT_DETAILS}
+                component={EventDetails}
+              />
+              <Route
+                key={location.key!}
+                path={[NavConstants.CREATE_EVENT, NavConstants.UPDATE_EVENT]}
+                component={EventForm}
+              />
+            </Container>
+          </>
+        )}
+      />
     </>
   );
 };
