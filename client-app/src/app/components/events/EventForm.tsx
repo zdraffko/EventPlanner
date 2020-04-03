@@ -1,6 +1,8 @@
-import React, { useState, FormEvent, useContext } from "react";
+import React, { useState, FormEvent, useContext, useEffect } from "react";
+import { useParams, useHistory } from "react-router-dom";
 import { Segment, Form, Button } from "semantic-ui-react";
 import IEvent from "../../models/eventModel";
+import * as NavConstants from "../../constants/navigationalConstants";
 import { observer } from "mobx-react-lite";
 import eventStore from "../../stores/eventStore";
 
@@ -10,26 +12,29 @@ const EventForm: React.FC = () => {
     selectedEvent,
     isElementLoading,
     updateEvent,
-    closeEventForm
+    loadEvent,
+    unselectEvent
   } = useContext(eventStore);
 
-  const initializeEvent = () => {
-    if (selectedEvent) {
-      return selectedEvent;
-    } else {
-      return {
-        id: "",
-        title: "",
-        category: "",
-        description: "",
-        date: "",
-        city: "",
-        venue: ""
-      };
-    }
-  };
+  const { id } = useParams();
+  const browserHistory = useHistory();
 
-  const [event, setEvent] = useState<IEvent>(initializeEvent);
+  const [event, setEvent] = useState<IEvent>({
+    id: "",
+    title: "",
+    category: "",
+    description: "",
+    date: "",
+    city: "",
+    venue: ""
+  });
+
+  useEffect(() => {
+    if (id && event.id.length === 0) {
+      loadEvent(id).then(() => selectedEvent && setEvent(selectedEvent));
+    }
+    return unselectEvent;
+  }, [event.id.length, id, loadEvent, selectedEvent, unselectEvent]);
 
   const handleInputChange = (
     htmlEvent: FormEvent<HTMLInputElement | HTMLTextAreaElement>
@@ -38,11 +43,14 @@ const EventForm: React.FC = () => {
     setEvent({ ...event, [name]: value });
   };
 
+  const redirectToEventDetails = () =>
+    browserHistory.push(`${NavConstants.EVENTS}/${event.id}`);
+
   const handleFormSubmit = () => {
     if (event.id.length === 0) {
-      createEvent(event);
+      createEvent(event).then(redirectToEventDetails);
     } else {
-      updateEvent(event);
+      updateEvent(event).then(redirectToEventDetails);
     }
   };
 
@@ -95,7 +103,7 @@ const EventForm: React.FC = () => {
           loading={isElementLoading}
         />
         <Button
-          onClick={closeEventForm}
+          onClick={() => browserHistory.push(NavConstants.EVENTS)}
           floated="right"
           type="button"
           content="Cancel"

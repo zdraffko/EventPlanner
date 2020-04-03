@@ -4,15 +4,13 @@ import agent from "../api/agent";
 import IEvent from "../models/eventModel";
 
 configure({ enforceActions: "always" });
+
 class EventStore {
   @observable
   events: Map<string, IEvent> = new Map();
 
   @observable
   selectedEvent: IEvent | undefined;
-
-  @observable
-  isInEditMode = false;
 
   @observable
   isGlobalLoading = false;
@@ -74,7 +72,6 @@ class EventStore {
       this.events.set(event.id, event);
 
       this.selectedEvent = event;
-      this.isInEditMode = false;
       this.isElementLoading = false;
     });
   };
@@ -89,7 +86,6 @@ class EventStore {
       this.events.set(event.id, event);
 
       this.selectedEvent = event;
-      this.isInEditMode = false;
       this.isElementLoading = false;
     });
   };
@@ -110,28 +106,7 @@ class EventStore {
   };
 
   @action
-  selectEvent = (id: string) => {
-    this.selectedEvent = this.events.get(id);
-    this.isInEditMode = false;
-  };
-
-  @action
   unselectEvent = () => (this.selectedEvent = undefined);
-
-  @action
-  openCreateEventForm = () => {
-    this.selectedEvent = undefined;
-    this.isInEditMode = true;
-  };
-
-  @action
-  openUpdateEventForm = (id: string) => {
-    this.selectedEvent = this.events.get(id);
-    this.isInEditMode = true;
-  };
-
-  @action
-  closeEventForm = () => (this.isInEditMode = false);
 }
 
 export default createContext(new EventStore());
