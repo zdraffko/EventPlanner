@@ -1,4 +1,6 @@
 using Application;
+using Application.Events.Commands.CreateEvent;
+using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -34,7 +36,10 @@ namespace API
                     });
             });
 
-            services.AddControllers();
+            services
+                .AddControllers()
+                .AddFluentValidation(options => options
+                    .RegisterValidatorsFromAssemblyContaining<CreateEventCommand>());
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
