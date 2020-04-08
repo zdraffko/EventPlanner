@@ -1,3 +1,4 @@
+using API.Middleware;
 using Application;
 using Application.Events.Commands.CreateEvent;
 using FluentValidation.AspNetCore;
@@ -48,6 +49,8 @@ namespace API
             {
                 app.UseDeveloperExceptionPage();
             }
+
+            app.UseMiddleware<ExceptionHandlerMiddleware>();
 
             app.UseHttpsRedirection();
 

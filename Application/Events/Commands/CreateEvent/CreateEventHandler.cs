@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Threading;
 using System.Threading.Tasks;
+using Application.Common.Exceptions;
 using Application.Common.Interfaces;
 using Domain.Entities;
 using MediatR;
@@ -28,7 +29,10 @@ namespace Application.Events.Commands.CreateEvent
 
             _context.Events.Add(newEvent);
 
-            await _context.SaveChangesAsync(cancellationToken);
+            var hasSucceeded = await _context.SaveChangesAsync(cancellationToken) > 0;
+
+            if (!hasSucceeded)
+                throw new PersistenceException();
 
             return newEvent.Id;
         }
