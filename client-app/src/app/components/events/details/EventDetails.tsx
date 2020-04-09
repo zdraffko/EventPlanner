@@ -8,6 +8,7 @@ import EventDetailsHeader from "./EventDetailsHeader";
 import EventDetailsInfo from "./EventDetailsInfo";
 import EventDetailsComments from "./EventDetailsComments";
 import EventDetailsSidebar from "./EventDetailsSidebar";
+import NotFound from "../../layout/errorPages/NotFound";
 
 const EventDetails: React.FC = () => {
   const { selectedEvent, loadEvent, isGlobalLoading } = useContext(eventStore);
@@ -18,8 +19,13 @@ const EventDetails: React.FC = () => {
     loadEvent(id!);
   }, [id, loadEvent]);
 
-  if (isGlobalLoading || !selectedEvent)
+  if (isGlobalLoading) {
     return <LoaderComponent content="Loading Event..." />;
+  }
+
+  if (!selectedEvent) {
+    return <NotFound />;
+  }
 
   return (
     <Grid>

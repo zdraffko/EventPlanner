@@ -28,7 +28,7 @@ class EventStore {
     );
     const groupedEvents = new Map<string, IEvent[]>();
 
-    eventsByDate.forEach(event => {
+    eventsByDate.forEach((event) => {
       const date = event.date.split("T")[0];
       const currentDateEvents = groupedEvents.get(date);
 
@@ -47,16 +47,21 @@ class EventStore {
   loadAllEvents = async () => {
     this.isGlobalLoading = true;
 
-    const events = await agent.events.getAll();
+    try {
+      const events = await agent.events.getAll();
 
-    runInAction(() => {
-      events.forEach(event => {
-        event.date = event.date.split(".")[0];
-        this.events.set(event.id, event);
+      runInAction(() => {
+        events.forEach((event) => {
+          event.date = event.date.split(".")[0];
+          this.events.set(event.id, event);
+          this.isGlobalLoading = false;
+        });
       });
-
-      this.isGlobalLoading = false;
-    });
+    } catch (error) {
+      runInAction(() => {
+        this.isGlobalLoading = false;
+      });
+    }
   };
 
   @action
@@ -68,12 +73,18 @@ class EventStore {
     } else {
       this.isGlobalLoading = true;
 
-      event = await agent.events.getEvent(id);
+      try {
+        event = await agent.events.getEvent(id);
 
-      runInAction(() => {
-        this.selectedEvent = event;
-        this.isGlobalLoading = false;
-      });
+        runInAction(() => {
+          this.selectedEvent = event;
+          this.isGlobalLoading = false;
+        });
+      } catch (error) {
+        runInAction(() => {
+          this.isGlobalLoading = false;
+        });
+      }
     }
   };
 
@@ -81,28 +92,40 @@ class EventStore {
   createEvent = async (event: IEvent) => {
     this.isElementLoading = true;
 
-    event.id = await agent.events.create(event);
+    try {
+      event.id = await agent.events.create(event);
 
-    runInAction(() => {
-      this.events.set(event.id, event);
+      runInAction(() => {
+        this.events.set(event.id, event);
 
-      this.selectedEvent = event;
-      this.isElementLoading = false;
-    });
+        this.selectedEvent = event;
+        this.isElementLoading = false;
+      });
+    } catch (error) {
+      runInAction(() => {
+        this.isElementLoading = false;
+      });
+    }
   };
 
   @action
   updateEvent = async (event: IEvent) => {
     this.isElementLoading = true;
 
-    await agent.events.update(event);
+    try {
+      await agent.events.update(event);
 
-    runInAction(() => {
-      this.events.set(event.id, event);
+      runInAction(() => {
+        this.events.set(event.id, event);
 
-      this.selectedEvent = event;
-      this.isElementLoading = false;
-    });
+        this.selectedEvent = event;
+        this.isElementLoading = false;
+      });
+    } catch (error) {
+      runInAction(() => {
+        this.isElementLoading = false;
+      });
+    }
   };
 
   @action
@@ -110,14 +133,21 @@ class EventStore {
     this.elementLoadingTarget = e.currentTarget.name;
     this.isElementLoading = true;
 
-    await agent.events.delete(id);
+    try {
+      await agent.events.delete(id);
 
-    runInAction(() => {
-      this.events.delete(id);
+      runInAction(() => {
+        this.events.delete(id);
 
-      this.isElementLoading = false;
-      this.elementLoadingTarget = "";
-    });
+        this.isElementLoading = false;
+        this.elementLoadingTarget = "";
+      });
+    } catch (error) {
+      runInAction(() => {
+        this.isElementLoading = false;
+        this.elementLoadingTarget = "";
+      });
+    }
   };
 
   @action
