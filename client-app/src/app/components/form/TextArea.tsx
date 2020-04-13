@@ -12,12 +12,12 @@ const TextArea: React.FC<IProps> = ({ name, placeholder, width, rows }) => {
 
   return (
     <Form.Field error={touched && !!error} width={width}>
-      <textarea {...field} placeholder={placeholder} rows={rows} />
       {touched && error && (
         <Label basic color="red">
           {error}
         </Label>
       )}
+      <textarea {...field} placeholder={placeholder} rows={rows} />
     </Form.Field>
   );
 };

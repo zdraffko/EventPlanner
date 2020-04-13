@@ -2,6 +2,7 @@ import React from "react";
 import { Segment, Item, Header, Button, Image } from "semantic-ui-react";
 import { observer } from "mobx-react-lite";
 import IEvent from "../../../models/eventModel";
+import { Link } from "react-router-dom";
 
 interface IProps {
   event: IEvent;
@@ -13,7 +14,7 @@ const eventImageTextStyles = {
   left: "5%",
   width: "100%",
   height: "auto",
-  color: "white"
+  color: "white",
 };
 
 const EventDetailsHeader: React.FC<IProps> = ({ event }) => (
@@ -23,7 +24,7 @@ const EventDetailsHeader: React.FC<IProps> = ({ event }) => (
         src={`/assets/categoryImages/${event.category}.png`}
         fluid
         style={{
-          filter: "brightness(30%)"
+          filter: "brightness(30%)",
         }}
       />
       <Segment style={eventImageTextStyles} basic>
@@ -47,7 +48,12 @@ const EventDetailsHeader: React.FC<IProps> = ({ event }) => (
     <Segment clearing attached="bottom">
       <Button color="teal">Join Event</Button>
       <Button>Cancel attendance</Button>
-      <Button color="orange" floated="right">
+      <Button
+        as={Link}
+        to={`/update/${event.id}`}
+        color="orange"
+        floated="right"
+      >
         Manage Event
       </Button>
     </Segment>

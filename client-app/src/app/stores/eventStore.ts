@@ -2,6 +2,8 @@ import { observable, action, computed, configure, runInAction } from "mobx";
 import { createContext, SyntheticEvent } from "react";
 import agent from "../api/agent";
 import IEvent from "../models/eventModel";
+import { browserHistory } from "../..";
+import * as NavConstants from "../constants/navigationalConstants";
 
 configure({ enforceActions: "always" });
 
@@ -66,20 +68,28 @@ class EventStore {
 
   @action
   loadEvent = async (id: string) => {
+    this.isGlobalLoading = true;
     let event = this.events.get(id);
 
     if (event) {
       this.selectedEvent = event;
+      this.isGlobalLoading = false;
+
+      return event;
     } else {
       this.isGlobalLoading = true;
 
       try {
         event = await agent.events.getEvent(id);
 
+        event.date = event.date.split(".")[0];
         runInAction(() => {
           this.selectedEvent = event;
+          this.events.set(event!.id, event!);
           this.isGlobalLoading = false;
         });
+
+        return event;
       } catch (error) {
         runInAction(() => {
           this.isGlobalLoading = false;
@@ -101,6 +111,8 @@ class EventStore {
         this.selectedEvent = event;
         this.isElementLoading = false;
       });
+
+      browserHistory.push(`${NavConstants.EVENTS}/${event.id}`);
     } catch (error) {
       runInAction(() => {
         this.isElementLoading = false;
@@ -121,6 +133,8 @@ class EventStore {
         this.selectedEvent = event;
         this.isElementLoading = false;
       });
+
+      browserHistory.push(`${NavConstants.EVENTS}/${event.id}`);
     } catch (error) {
       runInAction(() => {
         this.isElementLoading = false;

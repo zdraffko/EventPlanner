@@ -18,17 +18,17 @@ const SelectInput: React.FC<IProps> = ({
 
   return (
     <Form.Field error={touched && !!error} width={width}>
+      {touched && error && (
+        <Label basic color="red">
+          {error}
+        </Label>
+      )}
       <Select
         value={field.value}
         placeholder={placeholder}
         options={options}
         onChange={(event, data) => setValue(data.value)}
       />
-      {touched && error && (
-        <Label basic color="red">
-          {error}
-        </Label>
-      )}
     </Form.Field>
   );
 };

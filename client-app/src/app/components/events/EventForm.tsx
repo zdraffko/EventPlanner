@@ -1,7 +1,6 @@
-import React, { useState, FormEvent, useContext, useEffect } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import { useParams, useHistory } from "react-router-dom";
 import { Segment, Form, Button, Grid } from "semantic-ui-react";
-import IEvent from "../../models/eventModel";
 import * as NavConstants from "../../constants/navigationalConstants";
 import { observer } from "mobx-react-lite";
 import eventStore from "../../stores/eventStore";
@@ -13,67 +12,38 @@ import SelectInput from "../form/SelectInput";
 import { categoryOptions } from "../../util/categoryOptions";
 
 const EventForm: React.FC = () => {
-  const { initialFormValues, handleFormSubmit } = useEventForm();
+  const { FormValues, validationSchema, handleFormSubmit } = useEventForm();
 
-  const {
-    createEvent,
-    selectedEvent,
-    isElementLoading,
-    updateEvent,
-    loadEvent,
-    unselectEvent,
-  } = useContext(eventStore);
+  const { isElementLoading, loadEvent } = useContext(eventStore);
 
   const { id } = useParams();
   const browserHistory = useHistory();
 
-  const [event, setEvent] = useState<IEvent>({
-    id: "",
-    title: "",
-    category: "",
-    description: "",
-    date: "",
-    city: "",
-    venue: "",
-  });
+  const [event, setEvent] = useState(new FormValues());
 
   useEffect(() => {
-    if (id && event.id.length === 0) {
-      loadEvent(id).then(() => selectedEvent && setEvent(selectedEvent));
+    if (id) {
+      loadEvent(id).then((e) => setEvent(new FormValues(e)));
     }
-    return unselectEvent;
-  }, [event.id.length, id, loadEvent, selectedEvent, unselectEvent]);
-
-  const handleInputChange = (
-    htmlEvent: FormEvent<HTMLInputElement | HTMLTextAreaElement>
-  ) => {
-    const { name, value } = htmlEvent.currentTarget;
-    setEvent({ ...event, [name]: value });
-  };
-
-  const redirectToEventDetails = () =>
-    browserHistory.push(`${NavConstants.EVENTS}/${event.id}`);
-
-  // const handleFormSubmit = () => {
-  //   if (event.id.length === 0) {
-  //     createEvent(event).then(redirectToEventDetails);
-  //   } else {
-  //     updateEvent(event).then(redirectToEventDetails);
-  //   }
-  // };
+  }, [FormValues, id, loadEvent]);
 
   return (
     <Grid>
       <Grid.Column width={10}>
         <Segment clearing>
-          <Formik initialValues={initialFormValues} onSubmit={handleFormSubmit}>
-            {({ handleSubmit, handleChange, values }) => (
+          <Formik
+            initialValues={event}
+            validationSchema={validationSchema}
+            onSubmit={handleFormSubmit}
+            enableReinitialize
+          >
+            {({ handleSubmit, handleChange, isValid, dirty }) => (
               <Form onSubmit={handleSubmit}>
                 <TextInput
                   name="title"
                   type="text"
                   placeholder="Title"
-                  value={values.title}
+                  value={event.title}
                   onChange={handleChange}
                 />
                 <TextArea
@@ -81,13 +51,13 @@ const EventForm: React.FC = () => {
                   type="text"
                   placeholder="Description"
                   rows={3}
-                  value={values.description}
+                  value={event.description}
                   onChange={handleChange}
                 />
                 <SelectInput
                   name="category"
                   placeholder="Category"
-                  value={values.category}
+                  value={event.category}
                   options={categoryOptions}
                   onChange={handleChange}
                 />
@@ -95,21 +65,21 @@ const EventForm: React.FC = () => {
                   name="date"
                   type="datetime-local"
                   placeholder="Date"
-                  value={values.date}
+                  value={event.date}
                   onChange={handleChange}
                 />
                 <TextInput
                   name="city"
                   type="text"
                   placeholder="City"
-                  value={values.city}
+                  value={event.city}
                   onChange={handleChange}
                 />
                 <TextInput
                   name="venue"
                   type="text"
                   placeholder="Venue"
-                  value={values.venue}
+                  value={event.venue}
                   onChange={handleChange}
                 />
                 <Button
@@ -118,9 +88,16 @@ const EventForm: React.FC = () => {
                   type="submit"
                   content="Submit"
                   loading={isElementLoading}
+                  disabled={!isValid || !dirty}
                 />
                 <Button
-                  onClick={() => browserHistory.push(NavConstants.EVENTS)}
+                  onClick={() =>
+                    id
+                      ? browserHistory.push(
+                          `${NavConstants.EVENTS}/${event.id}`
+                        )
+                      : browserHistory.push(NavConstants.EVENTS)
+                  }
                   floated="right"
                   type="button"
                   content="Cancel"

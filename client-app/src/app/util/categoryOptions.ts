@@ -1,6 +1,6 @@
 export const categoryOptions = [
-  { value: "charity", text: "Charity" },
-  { value: "tech", text: "Tech" },
-  { value: "sports", text: "Sports" },
-  { value: "music", text: "Music" },
+  { value: "Charity", text: "Charity" },
+  { value: "Tech", text: "Tech" },
+  { value: "Sports", text: "Sports" },
+  { value: "Music", text: "Music" },
 ];
