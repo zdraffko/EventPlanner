@@ -2,6 +2,7 @@ using API.Middleware;
 using Application;
 using Application.Events.Commands.CreateEvent;
 using FluentValidation.AspNetCore;
+using Infrastructure;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -23,6 +24,7 @@ namespace API
         public void ConfigureServices(IServiceCollection services)
         {
             services.RegisterApplication();
+            services.RegisterInfrastructure(Configuration);
             services.RegisterPersistence(Configuration);
 
             services.AddCors(options =>
@@ -56,8 +58,9 @@ namespace API
 
             app.UseRouting();
 
+            app.UseAuthentication();
+            app.UseIdentityServer();
             app.UseAuthorization();
-
             app.UseCors("EventPlannerCors");
 
             app.UseEndpoints(endpoints =>

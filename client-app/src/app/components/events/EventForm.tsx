@@ -14,12 +14,11 @@ import { categoryOptions } from "../../util/categoryOptions";
 const EventForm: React.FC = () => {
   const { FormValues, validationSchema, handleFormSubmit } = useEventForm();
 
+  const [event, setEvent] = useState(new FormValues());
   const { isElementLoading, loadEvent } = useContext(eventStore);
 
   const { id } = useParams();
   const browserHistory = useHistory();
-
-  const [event, setEvent] = useState(new FormValues());
 
   useEffect(() => {
     if (id) {

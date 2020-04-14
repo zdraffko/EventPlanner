@@ -7,7 +7,7 @@ namespace Persistence
 {
     public class EventPlannerDbContext : DbContext, IEventPlannerDbContext
     {
-        public EventPlannerDbContext(DbContextOptions options) : base(options) { }
+        public EventPlannerDbContext(DbContextOptions<EventPlannerDbContext> options) : base(options) { }
 
         public DbSet<Event> Events { get; set; }
 
