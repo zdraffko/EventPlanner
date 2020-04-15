@@ -1,4 +1,5 @@
-﻿using Infrastructure.Identity;
+﻿using Application.Common.Interfaces;
+using Infrastructure.Identity;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -13,6 +14,8 @@ namespace Infrastructure
             this IServiceCollection services,
             IConfiguration configuration)
         {
+            services.AddScoped<IUserService, UserService>();
+
             services.AddDbContext<IdentityDbContext>(options
                 => options.UseSqlServer(configuration.GetConnectionString("DevConnection")));
 
