@@ -9,12 +9,12 @@ namespace Infrastructure.Identity.Migrations
             migrationBuilder.InsertData(
                 table: "AspNetUsers",
                 columns: new[] { "Id", "AccessFailedCount", "ConcurrencyStamp", "Email", "EmailConfirmed", "LockoutEnabled", "LockoutEnd", "NormalizedEmail", "NormalizedUserName", "PasswordHash", "PhoneNumber", "PhoneNumberConfirmed", "SecurityStamp", "TwoFactorEnabled", "UserName" },
-                values: new object[] { "4561f674-8ce5-416b-b9d8-e2a889ba5ed1", 0, "63e99712-224d-4fd0-b6af-ebfbcf1fb41e", "testUser1@test.com", false, false, null, null, null, "AQAAAAEAACcQAAAAEM0E26O6C3hmnlUq761ykXGGyxGAR/SLjreo1DvxnKOI0qiPySj8xGiaE6rBbHXgXQ==", null, false, "ce80598e-1cc5-4b48-a76b-99421260fd7c", false, "testUser1" });
+                values: new object[] { "e4acf16e-0afe-4c88-a15d-f29ddba3f1c9", 0, "288b0291-2144-4719-8a40-3d5db31b5b76", "testUser1@test.com", false, false, null, "TESTUSER1@TEST.COM", "TESTUSER1", "AQAAAAEAACcQAAAAEJWJ/llnpIVKdPwsH3FY6l/ia2p5+UfU0We70kNa07ShwQPT/joMOHrBSl6zydukTw==", null, false, "5fbe5051-da61-4720-9818-bdefc8c0aa6b", false, "testUser1" });
 
             migrationBuilder.InsertData(
                 table: "AspNetUsers",
                 columns: new[] { "Id", "AccessFailedCount", "ConcurrencyStamp", "Email", "EmailConfirmed", "LockoutEnabled", "LockoutEnd", "NormalizedEmail", "NormalizedUserName", "PasswordHash", "PhoneNumber", "PhoneNumberConfirmed", "SecurityStamp", "TwoFactorEnabled", "UserName" },
-                values: new object[] { "20ed9fe1-f130-4ff1-8553-d288ecc68c31", 0, "a8e0ab65-ed64-419c-89c4-ec3e5056b2df", "testUser2@test.com", false, false, null, null, null, "AQAAAAEAACcQAAAAEFtCt7QHar9TTvYwBvoXCXIOa8H8hjLWezQrTTi+RcMZ1TUCUc8yul9A8tvG00hkmQ==", null, false, "d11554ac-a29e-4abe-8026-7252a62cb9a3", false, "testUser2" });
+                values: new object[] { "a2440bb9-4531-41b4-9b54-6b619ecb2771", 0, "8e068a83-0f73-4d92-9969-cc37f7071e7c", "testUser2@test.com", false, false, null, "TESTUSER2@TEST.COM", "TESTUSER2", "AQAAAAEAACcQAAAAEF9S2s5EothLLWEQahQzW8aVOD88HyLdC3qMcJBwB5Bp1C0fJ6U+QTc+1HXMAM9Jjg==", null, false, "74c1110a-3aa7-49ca-99c9-048fbec1003b", false, "testUser2" });
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
@@ -22,12 +22,12 @@ namespace Infrastructure.Identity.Migrations
             migrationBuilder.DeleteData(
                 table: "AspNetUsers",
                 keyColumn: "Id",
-                keyValue: "20ed9fe1-f130-4ff1-8553-d288ecc68c31");
+                keyValue: "a2440bb9-4531-41b4-9b54-6b619ecb2771");
 
             migrationBuilder.DeleteData(
                 table: "AspNetUsers",
                 keyColumn: "Id",
-                keyValue: "4561f674-8ce5-416b-b9d8-e2a889ba5ed1");
+                keyValue: "e4acf16e-0afe-4c88-a15d-f29ddba3f1c9");
         }
     }
 }

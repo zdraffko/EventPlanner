@@ -12,13 +12,17 @@ namespace Infrastructure.Identity.Extensions
                     new AppUser
                     {
                         UserName = "testUser1",
+                        NormalizedUserName = "TESTUSER1",
                         Email = "testUser1@test.com",
+                        NormalizedEmail = "TESTUSER1@TEST.COM",
                         PasswordHash = new PasswordHasher<AppUser>().HashPassword(null, "Pa$$w0rd1")
                     },
                     new AppUser
                     {
                         UserName = "testUser2",
+                        NormalizedUserName = "TESTUSER2",
                         Email = "testUser2@test.com",
+                        NormalizedEmail = "TESTUSER2@TEST.COM",
                         PasswordHash = new PasswordHasher<AppUser>().HashPassword(null, "Pa$$w0rd2")
                     });
         }

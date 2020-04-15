@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Infrastructure.Identity.Migrations
 {
     [DbContext(typeof(IdentityDbContext))]
-    [Migration("20200414102128_SeedUsers")]
+    [Migration("20200415121602_SeedUsers")]
     partial class SeedUsers
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -170,29 +170,33 @@ namespace Infrastructure.Identity.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "4561f674-8ce5-416b-b9d8-e2a889ba5ed1",
+                            Id = "e4acf16e-0afe-4c88-a15d-f29ddba3f1c9",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "63e99712-224d-4fd0-b6af-ebfbcf1fb41e",
+                            ConcurrencyStamp = "288b0291-2144-4719-8a40-3d5db31b5b76",
                             Email = "testUser1@test.com",
                             EmailConfirmed = false,
                             LockoutEnabled = false,
-                            PasswordHash = "AQAAAAEAACcQAAAAEM0E26O6C3hmnlUq761ykXGGyxGAR/SLjreo1DvxnKOI0qiPySj8xGiaE6rBbHXgXQ==",
+                            NormalizedEmail = "TESTUSER1@TEST.COM",
+                            NormalizedUserName = "TESTUSER1",
+                            PasswordHash = "AQAAAAEAACcQAAAAEJWJ/llnpIVKdPwsH3FY6l/ia2p5+UfU0We70kNa07ShwQPT/joMOHrBSl6zydukTw==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "ce80598e-1cc5-4b48-a76b-99421260fd7c",
+                            SecurityStamp = "5fbe5051-da61-4720-9818-bdefc8c0aa6b",
                             TwoFactorEnabled = false,
                             UserName = "testUser1"
                         },
                         new
                         {
-                            Id = "20ed9fe1-f130-4ff1-8553-d288ecc68c31",
+                            Id = "a2440bb9-4531-41b4-9b54-6b619ecb2771",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "a8e0ab65-ed64-419c-89c4-ec3e5056b2df",
+                            ConcurrencyStamp = "8e068a83-0f73-4d92-9969-cc37f7071e7c",
                             Email = "testUser2@test.com",
                             EmailConfirmed = false,
                             LockoutEnabled = false,
-                            PasswordHash = "AQAAAAEAACcQAAAAEFtCt7QHar9TTvYwBvoXCXIOa8H8hjLWezQrTTi+RcMZ1TUCUc8yul9A8tvG00hkmQ==",
+                            NormalizedEmail = "TESTUSER2@TEST.COM",
+                            NormalizedUserName = "TESTUSER2",
+                            PasswordHash = "AQAAAAEAACcQAAAAEF9S2s5EothLLWEQahQzW8aVOD88HyLdC3qMcJBwB5Bp1C0fJ6U+QTc+1HXMAM9Jjg==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "d11554ac-a29e-4abe-8026-7252a62cb9a3",
+                            SecurityStamp = "74c1110a-3aa7-49ca-99c9-048fbec1003b",
                             TwoFactorEnabled = false,
                             UserName = "testUser2"
                         });
