@@ -9,9 +9,13 @@ namespace Infrastructure.Identity
     {
         private readonly UserManager<AppUser> _userManager;
         private readonly SignInManager<AppUser> _signInManager;
+        private readonly JwtGenerator _jwtGenerator;
 
-        public UserService(UserManager<AppUser> userManager, SignInManager<AppUser> signInManager)
-            => (_userManager, _signInManager) = (userManager, signInManager);
+        public UserService(
+            UserManager<AppUser> userManager,
+            SignInManager<AppUser> signInManager,
+            JwtGenerator jwtGenerator)
+            => (_userManager, _signInManager, _jwtGenerator) = (userManager, signInManager, jwtGenerator);
 
         public async Task<UserDto> LogInAsync(string email, string password)
         {
@@ -28,7 +32,7 @@ namespace Infrastructure.Identity
                 ? new UserDto
                 {
                     Username = user.UserName,
-                    Token = ""
+                    Token = _jwtGenerator.Generate(user)
                 }
                 : null;
         }

@@ -6,7 +6,7 @@ namespace API.Controllers
 {
     public class AccountController : ApiController
     {
-        [HttpPost("login")]
+        [HttpPost(nameof(LogIn))]
         public async Task<ActionResult<UserDto>> LogIn(LogInQuery query)
         {
             var user = await Mediator.Send(query);

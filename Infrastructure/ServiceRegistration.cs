@@ -1,10 +1,12 @@
-﻿using Application.Common.Interfaces;
+﻿using System.Text;
+using Application.Common.Interfaces;
 using Infrastructure.Identity;
-using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.IdentityModel.Tokens;
 
 namespace Infrastructure
 {
@@ -15,6 +17,7 @@ namespace Infrastructure
             IConfiguration configuration)
         {
             services.AddScoped<IUserService, UserService>();
+            services.AddScoped<JwtGenerator>();
 
             services.AddDbContext<IdentityDbContext>(options
                 => options.UseSqlServer(configuration.GetConnectionString("DevConnection")));
@@ -26,8 +29,15 @@ namespace Infrastructure
             services.AddIdentityServer()
                 .AddApiAuthorization<AppUser, IdentityDbContext>();
 
-            services.AddAuthentication()
-                .AddIdentityServerJwt();
+            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+                .AddJwtBearer(options =>
+                    options.TokenValidationParameters = new TokenValidationParameters
+                    {
+                        ValidateIssuerSigningKey = true,
+                        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["JwtSecret"])),
+                        ValidateIssuer = false,
+                        ValidateAudience = false
+                    });
 
             return services;
         }
