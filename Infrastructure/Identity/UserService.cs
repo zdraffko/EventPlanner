@@ -1,6 +1,11 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
+using Application.Common.Exceptions.HttpExceptions;
 using Application.Common.Interfaces;
+using Application.Common.Models;
+using Application.Users.Commands.Register;
 using Application.Users.Queries.LogIn;
+using Infrastructure.Identity.Extensions;
 using Microsoft.AspNetCore.Identity;
 
 namespace Infrastructure.Identity
@@ -35,6 +40,29 @@ namespace Infrastructure.Identity
                     Token = _jwtGenerator.Generate(user)
                 }
                 : null;
+        }
+
+        public async Task<AppResult> RegisterAsync(RegisterCommand requestPayload)
+        {
+            if (await _userManager.FindByEmailAsync(requestPayload.Email) != null)
+            {
+                return AppResult.Failure("A user with the provided email already exists.");
+            }
+
+            if (await _userManager.FindByNameAsync(requestPayload.Email) != null)
+            {
+                return AppResult.Failure("A user with the provided username already exists.");
+            }
+
+            var user = new AppUser
+            {
+                UserName = requestPayload.Username,
+                Email = requestPayload.Email
+            };
+
+            var result = await _userManager.CreateAsync(user, requestPayload.Password);
+
+            return result.ToAppResult();
         }
     }
 }

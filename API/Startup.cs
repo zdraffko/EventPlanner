@@ -3,8 +3,10 @@ using Application;
 using Application.Events.Commands.CreateEvent;
 using FluentValidation.AspNetCore;
 using Infrastructure;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Mvc.Authorization;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -23,9 +25,10 @@ namespace API
 
         public void ConfigureServices(IServiceCollection services)
         {
-            services.RegisterApplication();
-            services.RegisterInfrastructure(Configuration);
-            services.RegisterPersistence(Configuration);
+            services
+                .RegisterApplication()
+                .RegisterInfrastructure(Configuration)
+                .RegisterPersistence(Configuration);
 
             services.AddCors(options =>
             {
@@ -40,7 +43,11 @@ namespace API
             });
 
             services
-                .AddControllers()
+                .AddControllers(options =>
+                {
+                    var policy = new AuthorizationPolicyBuilder().RequireAuthenticatedUser().Build();
+                    options.Filters.Add(new AuthorizeFilter(policy));
+                })
                 .AddFluentValidation(options => options
                     .RegisterValidatorsFromAssemblyContaining<CreateEventCommand>());
         }
