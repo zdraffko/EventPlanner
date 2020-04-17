@@ -1,5 +1,7 @@
 ﻿using System.Threading.Tasks;
+using Application.Common.Models;
 using Application.Users.Commands.Register;
+using Application.Users.Queries.GetCurrentUser;
 using Application.Users.Queries.LogIn;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -24,6 +26,14 @@ namespace API.Controllers
             await Mediator.Send(command);
 
             return Ok();
+        }
+
+        [HttpGet]
+        public async Task<ActionResult<UserDto>> GetCurrentUser(GetCurrentUserQuery query)
+        {
+            var user = await Mediator.Send(query);
+
+            return Ok(user);
         }
     }
 }

@@ -1,4 +1,4 @@
-﻿namespace Application.Users.Queries.LogIn
+﻿namespace Application.Common.Models
 {
     public class UserDto
     {

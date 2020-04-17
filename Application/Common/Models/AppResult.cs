@@ -2,11 +2,7 @@
 {
     public class AppResult
     {
-        private AppResult(bool succeeded, string error)
-        {
-            Succeeded = succeeded;
-            Error = error;
-        }
+        private AppResult(bool succeeded, string error) => (Succeeded, Error) = (succeeded, error);
 
         internal bool Succeeded { get; }
 

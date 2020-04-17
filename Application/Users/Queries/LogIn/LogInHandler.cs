@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using Application.Common.Exceptions.HttpExceptions;
 using Application.Common.Interfaces;
+using Application.Common.Models;
 using MediatR;
 
 namespace Application.Users.Queries.LogIn

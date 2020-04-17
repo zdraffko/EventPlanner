@@ -1,4 +1,5 @@
-﻿using MediatR;
+﻿using Application.Common.Models;
+using MediatR;
 
 namespace Application.Users.Queries.LogIn
 {
