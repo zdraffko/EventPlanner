@@ -2,16 +2,19 @@ import React, { useContext, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { Grid } from "semantic-ui-react";
 import { observer } from "mobx-react-lite";
-import eventStore from "../../../stores/eventStore";
 import LoaderComponent from "../../layout/LoaderComponent";
 import EventDetailsHeader from "./EventDetailsHeader";
 import EventDetailsInfo from "./EventDetailsInfo";
 import EventDetailsComments from "./EventDetailsComments";
 import EventDetailsSidebar from "./EventDetailsSidebar";
 import NotFound from "../../layout/errorPages/NotFound";
+import { RootStoreContext } from "../../../stores/rootStore";
 
 const EventDetails: React.FC = () => {
-  const { selectedEvent, loadEvent, isGlobalLoading } = useContext(eventStore);
+  const { EventStore, CommonStore } = useContext(RootStoreContext);
+
+  const { selectedEvent, loadEvent } = EventStore;
+  const { isGlobalLoading } = CommonStore;
 
   const { id } = useParams();
 

@@ -1,27 +1,25 @@
 import { observable, action, computed, configure, runInAction } from "mobx";
-import { createContext, SyntheticEvent } from "react";
+import { SyntheticEvent } from "react";
 import agent from "../api/agent";
 import IEvent from "../models/eventModel";
 import { browserHistory } from "../..";
 import * as NavConstants from "../constants/navigationalConstants";
+import { RootStore } from "./rootStore";
 
 configure({ enforceActions: "always" });
 
 class EventStore {
+  private readonly RootStore: RootStore;
+
+  constructor(rootStore: RootStore) {
+    this.RootStore = rootStore;
+  }
+
   @observable
   events: Map<string, IEvent> = new Map();
 
   @observable
   selectedEvent: IEvent | undefined;
-
-  @observable
-  isGlobalLoading = false;
-
-  @observable
-  isElementLoading = false;
-
-  @observable
-  elementLoadingTarget = "";
 
   @computed
   get eventsGroupedByDate() {
@@ -47,7 +45,7 @@ class EventStore {
 
   @action
   loadAllEvents = async () => {
-    this.isGlobalLoading = true;
+    this.RootStore.CommonStore.isGlobalLoading = true;
 
     try {
       const events = await agent.events.getAll();
@@ -56,28 +54,28 @@ class EventStore {
         events.forEach((event) => {
           event.date = event.date.split(".")[0];
           this.events.set(event.id, event);
-          this.isGlobalLoading = false;
+          this.RootStore.CommonStore.isGlobalLoading = false;
         });
       });
     } catch (error) {
       runInAction(() => {
-        this.isGlobalLoading = false;
+        this.RootStore.CommonStore.isGlobalLoading = false;
       });
     }
   };
 
   @action
   loadEvent = async (id: string) => {
-    this.isGlobalLoading = true;
+    this.RootStore.CommonStore.isGlobalLoading = true;
     let event = this.events.get(id);
 
     if (event) {
       this.selectedEvent = event;
-      this.isGlobalLoading = false;
+      this.RootStore.CommonStore.isGlobalLoading = false;
 
       return event;
     } else {
-      this.isGlobalLoading = true;
+      this.RootStore.CommonStore.isGlobalLoading = true;
 
       try {
         event = await agent.events.getEvent(id);
@@ -86,13 +84,13 @@ class EventStore {
         runInAction(() => {
           this.selectedEvent = event;
           this.events.set(event!.id, event!);
-          this.isGlobalLoading = false;
+          this.RootStore.CommonStore.isGlobalLoading = false;
         });
 
         return event;
       } catch (error) {
         runInAction(() => {
-          this.isGlobalLoading = false;
+          this.RootStore.CommonStore.isGlobalLoading = false;
         });
       }
     }
@@ -100,7 +98,7 @@ class EventStore {
 
   @action
   createEvent = async (event: IEvent) => {
-    this.isElementLoading = true;
+    this.RootStore.CommonStore.isElementLoading = true;
 
     try {
       event.id = await agent.events.create(event);
@@ -109,20 +107,20 @@ class EventStore {
         this.events.set(event.id, event);
 
         this.selectedEvent = event;
-        this.isElementLoading = false;
+        this.RootStore.CommonStore.isElementLoading = false;
       });
 
       browserHistory.push(`${NavConstants.EVENTS}/${event.id}`);
     } catch (error) {
       runInAction(() => {
-        this.isElementLoading = false;
+        this.RootStore.CommonStore.isElementLoading = false;
       });
     }
   };
 
   @action
   updateEvent = async (event: IEvent) => {
-    this.isElementLoading = true;
+    this.RootStore.CommonStore.isElementLoading = true;
 
     try {
       await agent.events.update(event);
@@ -131,21 +129,21 @@ class EventStore {
         this.events.set(event.id, event);
 
         this.selectedEvent = event;
-        this.isElementLoading = false;
+        this.RootStore.CommonStore.isElementLoading = false;
       });
 
       browserHistory.push(`${NavConstants.EVENTS}/${event.id}`);
     } catch (error) {
       runInAction(() => {
-        this.isElementLoading = false;
+        this.RootStore.CommonStore.isElementLoading = false;
       });
     }
   };
 
   @action
   deleteEvent = async (id: string, e: SyntheticEvent<HTMLButtonElement>) => {
-    this.elementLoadingTarget = e.currentTarget.name;
-    this.isElementLoading = true;
+    this.RootStore.CommonStore.elementLoadingTarget = e.currentTarget.name;
+    this.RootStore.CommonStore.isElementLoading = true;
 
     try {
       await agent.events.delete(id);
@@ -153,13 +151,13 @@ class EventStore {
       runInAction(() => {
         this.events.delete(id);
 
-        this.isElementLoading = false;
-        this.elementLoadingTarget = "";
+        this.RootStore.CommonStore.isElementLoading = false;
+        this.RootStore.CommonStore.elementLoadingTarget = "";
       });
     } catch (error) {
       runInAction(() => {
-        this.isElementLoading = false;
-        this.elementLoadingTarget = "";
+        this.RootStore.CommonStore.isElementLoading = false;
+        this.RootStore.CommonStore.elementLoadingTarget = "";
       });
     }
   };
@@ -168,4 +166,4 @@ class EventStore {
   unselectEvent = () => (this.selectedEvent = undefined);
 }
 
-export default createContext(new EventStore());
+export default EventStore;

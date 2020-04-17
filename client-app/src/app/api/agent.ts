@@ -2,6 +2,7 @@ import axios, { AxiosResponse, AxiosError } from "axios";
 import IEvent from "../models/eventModel";
 import { browserHistory } from "../..";
 import * as NavConstants from "../constants/navigationalConstants";
+import { IUserLogInFormValues, IUser, IUserRegisterFormValues } from "../models/userModels";
 
 axios.defaults.baseURL = "https://localhost:44348/api";
 
@@ -44,6 +45,14 @@ const events = {
   delete: (id: string) => requests.delete(`${eventsUrl}/${id}`),
 };
 
+const accountUrl = "/account";
+const users = {
+  logIn: (loginInfo: IUserLogInFormValues): Promise<IUser> => requests.post(`${accountUrl}/login`, loginInfo),
+  register: (registerInfo: IUserRegisterFormValues) => requests.post(`${accountUrl}/register`, registerInfo),
+  getCurrentUser: (): Promise<IUser> => requests.get(accountUrl),
+};
+
 export default {
   events,
+  users,
 };

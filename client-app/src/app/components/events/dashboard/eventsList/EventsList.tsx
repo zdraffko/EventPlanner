@@ -1,11 +1,11 @@
 import React, { useContext, Fragment } from "react";
 import { observer } from "mobx-react-lite";
 import { Item, Label } from "semantic-ui-react";
-import eventStore from "../../../../stores/eventStore";
 import EventItem from "./EventItem";
+import { RootStoreContext } from "../../../../stores/rootStore";
 
 const EventList: React.FC = () => {
-  const { eventsGroupedByDate } = useContext(eventStore);
+  const { eventsGroupedByDate } = useContext(RootStoreContext).EventStore;
 
   return (
     <>
@@ -15,7 +15,7 @@ const EventList: React.FC = () => {
             {date}
           </Label>
           <Item.Group divided>
-            {events.map(event => (
+            {events.map((event) => (
               <EventItem key={event.id} event={event} />
             ))}
           </Item.Group>

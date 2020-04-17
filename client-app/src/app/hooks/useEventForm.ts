@@ -1,10 +1,10 @@
 import { useCallback, useContext } from "react";
 import * as YupValidator from "yup";
 import IEvent from "../models/eventModel";
-import eventStore from "../stores/eventStore";
+import { RootStoreContext } from "../stores/rootStore";
 
 const useEventForm = () => {
-  const { createEvent, updateEvent } = useContext(eventStore);
+  const { createEvent, updateEvent } = useContext(RootStoreContext).EventStore;
 
   class FormValues implements IEvent {
     constructor(values?: IEvent) {
@@ -21,9 +21,7 @@ const useEventForm = () => {
   }
 
   const validationSchema = YupValidator.object({
-    title: YupValidator.string()
-      .required("Title is required.")
-      .max(100, "The title must not exceed 100 characters."),
+    title: YupValidator.string().required("Title is required.").max(100, "The title must not exceed 100 characters."),
 
     description: YupValidator.string()
       .required("Description is required.")
@@ -33,9 +31,7 @@ const useEventForm = () => {
 
     date: YupValidator.date().required("Date is required."),
 
-    city: YupValidator.string()
-      .required("City is required.")
-      .max(100, "The city name must not exceed 100 characters."),
+    city: YupValidator.string().required("City is required.").max(100, "The city name must not exceed 100 characters."),
 
     venue: YupValidator.string()
       .required("Venue is required.")
