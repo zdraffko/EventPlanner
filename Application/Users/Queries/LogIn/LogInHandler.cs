@@ -16,7 +16,7 @@ namespace Application.Users.Queries.LogIn
         public async Task<UserDto> Handle(LogInQuery request, CancellationToken cancellationToken)
         {
             var user = await _userService.LogInAsync(request.Email, request.Password)
-                ?? throw new UnauthorizedException();
+                ?? throw new UnauthorizedException("Invalid email or password.");
 
             return user;
         }

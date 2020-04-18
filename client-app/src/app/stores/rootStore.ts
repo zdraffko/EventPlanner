@@ -2,6 +2,9 @@ import { createContext } from "react";
 import EventStore from "./eventStore";
 import UserStore from "./userStore";
 import CommonStore from "./commonStore";
+import { configure } from "mobx";
+
+configure({ enforceActions: "always" });
 
 class RootStore {
   EventStore: EventStore = new EventStore(this);

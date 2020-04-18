@@ -1,6 +1,4 @@
-import { observable, configure } from "mobx";
-
-configure({ enforceActions: "always" });
+import { observable } from "mobx";
 
 class CommonStore {
   @observable

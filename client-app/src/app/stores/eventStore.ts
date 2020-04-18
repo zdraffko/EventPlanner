@@ -1,12 +1,10 @@
-import { observable, action, computed, configure, runInAction } from "mobx";
+import { observable, action, computed, runInAction } from "mobx";
 import { SyntheticEvent } from "react";
 import agent from "../api/agent";
 import IEvent from "../models/eventModel";
 import { browserHistory } from "../..";
 import * as NavConstants from "../constants/navigationalConstants";
 import { RootStore } from "./rootStore";
-
-configure({ enforceActions: "always" });
 
 class EventStore {
   private readonly RootStore: RootStore;

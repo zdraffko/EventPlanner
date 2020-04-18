@@ -25,6 +25,8 @@ axios.interceptors.response.use(undefined, (error: AxiosError) => {
   } else if (response?.status === 500) {
     browserHistory.push(NavConstants.SERVER_ERROR);
   }
+
+  throw response;
 });
 
 const responseBody = (response: AxiosResponse) => response.data;
@@ -36,20 +38,18 @@ const requests = {
   delete: (url: string) => axios.delete(url).then(responseBody),
 };
 
-const eventsUrl = "/events";
 const events = {
-  getAll: (): Promise<IEvent[]> => requests.get(eventsUrl),
-  getEvent: (id: string): Promise<IEvent> => requests.get(`${eventsUrl}/${id}`),
-  create: (event: IEvent): Promise<string> => requests.post(eventsUrl, event),
-  update: (event: IEvent) => requests.put(`${eventsUrl}/${event.id}`, event),
-  delete: (id: string) => requests.delete(`${eventsUrl}/${id}`),
+  getAll: (): Promise<IEvent[]> => requests.get(NavConstants.EVENTS),
+  getEvent: (id: string): Promise<IEvent> => requests.get(`${NavConstants.EVENTS}/${id}`),
+  create: (event: IEvent): Promise<string> => requests.post(NavConstants.EVENTS, event),
+  update: (event: IEvent) => requests.put(`${NavConstants.EVENTS}/${event.id}`, event),
+  delete: (id: string) => requests.delete(`${NavConstants.EVENTS}/${id}`),
 };
 
-const accountUrl = "/account";
 const users = {
-  logIn: (loginInfo: IUserLogInFormValues): Promise<IUser> => requests.post(`${accountUrl}/login`, loginInfo),
-  register: (registerInfo: IUserRegisterFormValues) => requests.post(`${accountUrl}/register`, registerInfo),
-  getCurrentUser: (): Promise<IUser> => requests.get(accountUrl),
+  logIn: (loginInfo: IUserLogInFormValues): Promise<IUser> => requests.post(NavConstants.LOGIN, loginInfo),
+  register: (registerInfo: IUserRegisterFormValues) => requests.post(NavConstants.REGISTER, registerInfo),
+  getCurrentUser: (): Promise<IUser> => requests.get(NavConstants.ACCOUNT),
 };
 
 export default {

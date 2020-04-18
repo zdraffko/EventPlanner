@@ -1,8 +1,8 @@
-import { observable, computed, action, configure } from "mobx";
+import { observable, computed, action, runInAction } from "mobx";
+import { browserHistory } from "../..";
+import * as NavConstants from "../constants/navigationalConstants";
 import { IUser, IUserLogInFormValues } from "../models/userModels";
 import agent from "../api/agent";
-
-configure({ enforceActions: "always" });
 
 class UserStore {
   @observable
@@ -15,11 +15,13 @@ class UserStore {
 
   @action
   logIn = async (loginInfo: IUserLogInFormValues) => {
-    try {
-      this.user = await agent.users.logIn(loginInfo);
-    } catch (error) {
-      console.log(error);
-    }
+    const user = await agent.users.logIn(loginInfo);
+
+    runInAction(() => {
+      this.user = user;
+    });
+
+    browserHistory.push(NavConstants.EVENTS);
   };
 }
 
