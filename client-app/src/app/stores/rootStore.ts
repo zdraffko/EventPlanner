@@ -8,7 +8,7 @@ configure({ enforceActions: "always" });
 
 class RootStore {
   EventStore: EventStore = new EventStore(this);
-  UserStore: UserStore = new UserStore();
+  UserStore: UserStore = new UserStore(this);
   CommonStore: CommonStore = new CommonStore();
 }
 

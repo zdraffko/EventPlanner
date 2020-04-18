@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { Route, useLocation, Switch } from "react-router-dom";
 import { observer } from "mobx-react-lite";
 import { Container } from "semantic-ui-react";
@@ -12,9 +12,30 @@ import LogInForm from "./components/users/LogInForm";
 import NotFound from "./components/layout/errorPages/NotFound";
 import ServerError from "./components/layout/errorPages/ServerError";
 import NetworkError from "./components/layout/errorPages/NetworkError";
+import { RootStoreContext } from "./stores/rootStore";
+import LoaderComponent from "./components/layout/LoaderComponent";
 
 const App: React.FC = () => {
   const location = useLocation();
+  const { UserStore, CommonStore } = useContext(RootStoreContext);
+  const [isAppLoaded, setIsAppLoaded] = useState(false);
+
+  const { getCurrentUser } = UserStore;
+  const { token } = CommonStore;
+
+  useEffect(() => {
+    if (token) {
+      getCurrentUser().finally(() => {
+        setIsAppLoaded(true);
+      });
+    } else {
+      setIsAppLoaded(true);
+    }
+  }, [getCurrentUser, setIsAppLoaded, token]);
+
+  if (!isAppLoaded) {
+    return <LoaderComponent content="Loading App" />;
+  }
 
   return (
     <>

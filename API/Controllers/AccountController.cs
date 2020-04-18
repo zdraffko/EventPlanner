@@ -29,9 +29,9 @@ namespace API.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<UserDto>> GetCurrentUser(GetCurrentUserQuery query)
+        public async Task<ActionResult<UserDto>> GetCurrentUser()
         {
-            var user = await Mediator.Send(query);
+            var user = await Mediator.Send(new GetCurrentUserQuery());
 
             return Ok(user);
         }

@@ -1,4 +1,5 @@
 import React from "react";
+import { observer } from "mobx-react-lite";
 import { Formik } from "formik";
 import TextInput from "../form/TextInput";
 import { Form, Button } from "semantic-ui-react";
@@ -32,4 +33,4 @@ const LogIn = () => {
   );
 };
 
-export default LogIn;
+export default observer(LogIn);

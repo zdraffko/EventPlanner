@@ -3,8 +3,19 @@ import IEvent from "../models/eventModel";
 import { browserHistory } from "../..";
 import * as NavConstants from "../constants/navigationalConstants";
 import { IUserLogInFormValues, IUser, IUserRegisterFormValues } from "../models/userModels";
+import { tokenName } from "../stores/commonStore";
 
 axios.defaults.baseURL = "https://localhost:44348/api";
+
+axios.interceptors.request.use((config) => {
+  var token = window.localStorage.getItem(tokenName);
+
+  if (token) {
+    config.headers.Authorization = `Bearer ${token}`;
+  }
+
+  return config;
+});
 
 axios.interceptors.response.use(undefined, (error: AxiosError) => {
   if (error.message === "Network Error" && !error.response) {
