@@ -1,7 +1,7 @@
 import { observable, computed, action, runInAction } from "mobx";
 import { browserHistory } from "../..";
 import * as NavConstants from "../constants/navigationalConstants";
-import { IUser, IUserLogInFormValues } from "../models/userModels";
+import { IUser, IUserLogInFormValues, IUserRegisterFormValues } from "../models/userModels";
 import agent from "../api/agent";
 import { RootStore } from "./rootStore";
 
@@ -15,6 +15,9 @@ class UserStore {
   @observable
   user: IUser | null = null;
 
+  @observable
+  hasRegistered = false;
+
   @computed
   get isLoggedIn() {
     return !!this.user;
@@ -26,9 +29,11 @@ class UserStore {
 
     runInAction(() => {
       this.user = user;
+      this.hasRegistered = false;
     });
 
     this.RootStore.CommonStore.setToken(user.token);
+    this.RootStore.CommonStore.closeModal();
     browserHistory.push(NavConstants.EVENTS);
   };
 
@@ -40,6 +45,13 @@ class UserStore {
 
     this.RootStore.CommonStore.removeToken();
     browserHistory.push(NavConstants.HOME);
+  };
+
+  @action
+  register = async (registerInfo: IUserRegisterFormValues) => {
+    await agent.users.register(registerInfo);
+
+    runInAction(() => (this.hasRegistered = true));
   };
 
   @action

@@ -8,7 +8,8 @@ namespace Application.Users.Commands.Register
         public RegisterValidator()
         {
             RuleFor(command => command.Username)
-                .NotEmpty().WithMessage("A username was not provided.");
+                .NotEmpty().WithMessage("A username was not provided.")
+                .MaximumLength(20).WithMessage("Username must not exceed 20 characters.");
 
             RuleFor(command => command.Email)
                 .NotEmpty().WithMessage("An email was not provided.")

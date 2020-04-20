@@ -4,11 +4,14 @@ import { Container, Segment, Header, Button, Image } from "semantic-ui-react";
 import { Link } from "react-router-dom";
 import * as NavConstants from "../../constants/navigationalConstants";
 import { RootStoreContext } from "../../stores/rootStore";
+import LogInForm from "../users/LogInForm";
+import RegisterForm from "../users/RegisterForm";
 
 const Home = () => {
-  const { UserStore } = useContext(RootStoreContext);
+  const { UserStore, CommonStore } = useContext(RootStoreContext);
 
   const { user, isLoggedIn } = UserStore;
+  const { openModal } = CommonStore;
 
   return (
     <Segment inverted textAlign="center" vertical className="masthead">
@@ -28,10 +31,10 @@ const Home = () => {
           <>
             <Header as="h2" inverted content="Welcome" />
             <div style={{ marginBottom: "20px" }}>Please log in or register to access the events</div>
-            <Button as={Link} to={NavConstants.LOGIN} size="huge" inverted>
+            <Button onClick={() => openModal(<LogInForm />)} size="huge" inverted>
               Log In
             </Button>
-            <Button as={Link} to={NavConstants.REGISTER} size="huge" inverted>
+            <Button onClick={() => openModal(<RegisterForm />)} size="huge" inverted>
               Register
             </Button>
           </>

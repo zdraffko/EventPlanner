@@ -15,6 +15,12 @@ class CommonStore {
   @observable
   token: string | null = window.localStorage.getItem(tokenName);
 
+  @observable.shallow
+  modal = {
+    isOpen: false,
+    content: null,
+  };
+
   @action
   setToken = (token: string) => {
     this.token = token;
@@ -25,6 +31,18 @@ class CommonStore {
   removeToken = () => {
     this.token = null;
     window.localStorage.removeItem(tokenName);
+  };
+
+  @action
+  openModal = (component) => {
+    this.modal.isOpen = true;
+    this.modal.content = component;
+  };
+
+  @action
+  closeModal = () => {
+    this.modal.isOpen = false;
+    this.modal.content = null;
   };
 }
 

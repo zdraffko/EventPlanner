@@ -8,18 +8,13 @@ interface IProps extends FormFieldProps {
   options: Array<{ value: string; text: string }>;
 }
 
-const SelectInput: React.FC<IProps> = ({
-  name,
-  placeholder,
-  width,
-  options,
-}) => {
+const SelectInput: React.FC<IProps> = ({ name, placeholder, width, options }) => {
   const [field, { touched, error }, { setValue }] = useField(name);
 
   return (
     <Form.Field error={touched && !!error} width={width}>
       {touched && error && (
-        <Label basic color="red">
+        <Label basic color="red" style={{ marginBottom: "5px" }}>
           {error}
         </Label>
       )}
