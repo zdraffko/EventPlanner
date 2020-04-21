@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace Domain.Entities
 {
@@ -17,5 +18,7 @@ namespace Domain.Entities
         public string City { get; set; }
 
         public string Venue { get; set; }
+
+        public ICollection<UserEvent> UserEvents { get; set; }
     }
 }

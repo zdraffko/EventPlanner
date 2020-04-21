@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using Application.Common.Interfaces;
 using Application.Common.Models;
 using Application.Users.Commands.Register;
+using Domain.Entities;
 using Infrastructure.Identity.Extensions;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
