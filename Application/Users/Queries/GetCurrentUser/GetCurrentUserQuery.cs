@@ -1,4 +1,4 @@
-﻿using Application.Common.Models;
+﻿using Application.Common.Models.DTOs;
 using MediatR;
 
 namespace Application.Users.Queries.GetCurrentUser

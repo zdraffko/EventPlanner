@@ -1,5 +1,5 @@
 ﻿using System.Threading.Tasks;
-using Application.Common.Models;
+using Application.Common.Models.DTOs;
 using Application.Users.Commands.Register;
 using Application.Users.Queries.GetCurrentUser;
 using Application.Users.Queries.LogIn;

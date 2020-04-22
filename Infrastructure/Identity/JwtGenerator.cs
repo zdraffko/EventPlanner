@@ -2,13 +2,14 @@
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
+using Application.Common.Interfaces;
 using Domain.Entities;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 
 namespace Infrastructure.Identity
 {
-    public class JwtGenerator
+    public class JwtGenerator : IJwtGenerator
     {
         private readonly SymmetricSecurityKey _key;
 

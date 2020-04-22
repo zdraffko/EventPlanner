@@ -59,7 +59,7 @@ namespace API
                 app.UseDeveloperExceptionPage();
             }
 
-            app.UseMiddleware<ExceptionHandlerMiddleware>();
+            //app.UseMiddleware<ExceptionHandlerMiddleware>();
 
             app.UseHttpsRedirection();
 

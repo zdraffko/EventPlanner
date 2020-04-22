@@ -1,15 +1,16 @@
 ﻿using System.Threading.Tasks;
 using Application.Common.Models;
 using Application.Users.Commands.Register;
+using Domain.Entities;
 
 namespace Application.Common.Interfaces
 {
     public interface IUserService
     {
-        Task<UserDto> LogInAsync(string email, string password);
+        Task<AppUser> LogInAsync(string email, string password);
 
         Task<AppResult> RegisterAsync(RegisterCommand requestPayload);
 
-        Task<UserDto> GetCurrentUserAsync();
+        Task<AppUser> GetCurrentUserAsync();
     }
 }

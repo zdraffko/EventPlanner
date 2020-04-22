@@ -18,6 +18,7 @@ namespace Infrastructure.Identity
         {
             base.OnModelCreating(builder);
 
+            builder.ApplyConfigurationsFromAssembly(GetType().Assembly);
             builder.SeedUsers();
         }
     }

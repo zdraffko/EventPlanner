@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace Domain.Entities
+namespace Application.Common.Models.DTOs
 {
-    public class Event
+    public class EventDto
     {
         public Guid Id { get; set; }
 
@@ -19,6 +19,6 @@ namespace Domain.Entities
 
         public string Venue { get; set; }
 
-        public virtual ICollection<UserEvent> UserEvents { get; set; }
+        public ICollection<AttendeeDto> Attendees { get; set; }
     }
 }

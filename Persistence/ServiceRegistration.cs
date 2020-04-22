@@ -11,8 +11,11 @@ namespace Persistence
             this IServiceCollection services,
             IConfiguration configuration)
         {
-            services.AddDbContextPool<EventPlannerDbContext>(options
-                => options.UseSqlServer(configuration.GetConnectionString("DevConnection")));
+            services.AddDbContextPool<EventPlannerDbContext>(options =>
+            {
+                options.UseLazyLoadingProxies();
+                options.UseSqlServer(configuration.GetConnectionString("DevConnection"));
+            });
 
             services.AddScoped<IEventPlannerDbContext>(provider
                 => provider.GetService<EventPlannerDbContext>());

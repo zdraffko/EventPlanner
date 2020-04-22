@@ -9,6 +9,8 @@ namespace Application.Common.Interfaces
     {
         DbSet<Event> Events { get; set; }
 
+        DbSet<UserEvent> UserEvents { get; set; }
+
         Task<int> SaveChangesAsync(CancellationToken cancellationToken = new CancellationToken());
     }
 }

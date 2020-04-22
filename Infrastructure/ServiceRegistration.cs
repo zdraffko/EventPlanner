@@ -18,7 +18,7 @@ namespace Infrastructure
             IConfiguration configuration)
         {
             services.AddScoped<IUserService, UserService>();
-            services.AddScoped<JwtGenerator>();
+            services.AddScoped<IJwtGenerator, JwtGenerator>();
 
             services.AddDbContext<IdentityDbContext>(options
                 => options.UseSqlServer(configuration.GetConnectionString("DevConnection")));

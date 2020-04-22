@@ -6,11 +6,11 @@ namespace Domain.Entities
     {
         public string AppUserId { get; set; }
 
-        public AppUser AppUser { get; set; }
+        public virtual AppUser AppUser { get; set; }
 
         public Guid EventId { get; set; }
 
-        public Event Event { get; set; }
+        public virtual Event Event { get; set; }
 
         public DateTime DateJoined { get; set; }
 

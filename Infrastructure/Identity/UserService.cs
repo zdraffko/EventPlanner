@@ -14,18 +14,16 @@ namespace Infrastructure.Identity
     {
         private readonly UserManager<AppUser> _userManager;
         private readonly SignInManager<AppUser> _signInManager;
-        private readonly JwtGenerator _jwtGenerator;
         private readonly IHttpContextAccessor _httpAccessor;
 
         public UserService(
             UserManager<AppUser> userManager,
             SignInManager<AppUser> signInManager,
-            JwtGenerator jwtGenerator,
             IHttpContextAccessor httpAccessor)
-            => (_userManager, _signInManager, _jwtGenerator, _httpAccessor)
-                = (userManager, signInManager, jwtGenerator, httpAccessor);
+            => (_userManager, _signInManager, _httpAccessor)
+                = (userManager, signInManager, httpAccessor);
 
-        public async Task<UserDto> LogInAsync(string email, string password)
+        public async Task<AppUser> LogInAsync(string email, string password)
         {
             var user = await _userManager.FindByEmailAsync(email);
 
@@ -36,13 +34,7 @@ namespace Infrastructure.Identity
 
             var result = await _signInManager.CheckPasswordSignInAsync(user, password, false);
 
-            return result.Succeeded
-                ? new UserDto
-                {
-                    Username = user.UserName,
-                    Token = _jwtGenerator.Generate(user)
-                }
-                : null;
+            return result.Succeeded ? user : null;
         }
 
         public async Task<AppResult> RegisterAsync(RegisterCommand requestPayload)
@@ -68,7 +60,7 @@ namespace Infrastructure.Identity
             return result.ToAppResult();
         }
 
-        public async Task<UserDto> GetCurrentUserAsync()
+        public async Task<AppUser> GetCurrentUserAsync()
         {
             var username = _httpAccessor.HttpContext?.User?.FindFirstValue(ClaimTypes.NameIdentifier);
 
@@ -79,16 +71,7 @@ namespace Infrastructure.Identity
 
             var user = await _userManager.FindByNameAsync(username);
 
-            if (user == null)
-            {
-                return null;
-            }
-
-            return new UserDto
-            {
-                Username = user.UserName,
-                Token = _jwtGenerator.Generate(user)
-            };
+            return user;
         }
     }
 }

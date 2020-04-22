@@ -19,6 +19,155 @@ namespace Infrastructure.Identity.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+            modelBuilder.Entity("Domain.Entities.AppUser", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<int>("AccessFailedCount")
+                        .HasColumnType("int");
+
+                    b.Property<string>("ConcurrencyStamp")
+                        .IsConcurrencyToken()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Email")
+                        .HasColumnType("nvarchar(256)")
+                        .HasMaxLength(256);
+
+                    b.Property<bool>("EmailConfirmed")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("LockoutEnabled")
+                        .HasColumnType("bit");
+
+                    b.Property<DateTimeOffset?>("LockoutEnd")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<string>("NormalizedEmail")
+                        .HasColumnType("nvarchar(256)")
+                        .HasMaxLength(256);
+
+                    b.Property<string>("NormalizedUserName")
+                        .HasColumnType("nvarchar(256)")
+                        .HasMaxLength(256);
+
+                    b.Property<string>("PasswordHash")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("PhoneNumber")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("PhoneNumberConfirmed")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("SecurityStamp")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("TwoFactorEnabled")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("UserName")
+                        .HasColumnType("nvarchar(256)")
+                        .HasMaxLength(256);
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("NormalizedEmail")
+                        .HasName("EmailIndex");
+
+                    b.HasIndex("NormalizedUserName")
+                        .IsUnique()
+                        .HasName("UserNameIndex")
+                        .HasFilter("[NormalizedUserName] IS NOT NULL");
+
+                    b.ToTable("AspNetUsers");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = "6b21190f-efa5-4862-909b-a1d95d629d49",
+                            AccessFailedCount = 0,
+                            ConcurrencyStamp = "b4f3e597-45a4-42ae-b4d9-5a77c6867c0f",
+                            Email = "testUser1@test.com",
+                            EmailConfirmed = false,
+                            LockoutEnabled = false,
+                            NormalizedEmail = "TESTUSER1@TEST.COM",
+                            NormalizedUserName = "TESTUSER1",
+                            PasswordHash = "AQAAAAEAACcQAAAAEGehY8NPxGAU1RhPz4eJZ1zACUnxHbBTa2vG5AKf9LNB+Vog5gvV4WvNCJjyjuisKg==",
+                            PhoneNumberConfirmed = false,
+                            SecurityStamp = "fd756dbb-1b54-416f-a325-5d63a51cd4dd",
+                            TwoFactorEnabled = false,
+                            UserName = "testUser1"
+                        },
+                        new
+                        {
+                            Id = "b860ecb4-0cd1-4335-a6a2-df11beaee2ea",
+                            AccessFailedCount = 0,
+                            ConcurrencyStamp = "da10b50b-4864-48be-a2e0-25b44b8a97ec",
+                            Email = "testUser2@test.com",
+                            EmailConfirmed = false,
+                            LockoutEnabled = false,
+                            NormalizedEmail = "TESTUSER2@TEST.COM",
+                            NormalizedUserName = "TESTUSER2",
+                            PasswordHash = "AQAAAAEAACcQAAAAEIG1lePPQ1S5pBf3qEREFSjuEkKToi8IcOCJC8NAdwX51MVEDaoAMoaMQ2xprDQo3A==",
+                            PhoneNumberConfirmed = false,
+                            SecurityStamp = "dec8cd66-0396-4e04-bc00-5ea47e20d274",
+                            TwoFactorEnabled = false,
+                            UserName = "testUser2"
+                        });
+                });
+
+            modelBuilder.Entity("Domain.Entities.Event", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Category")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("City")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("Date")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Description")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Title")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Venue")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Event");
+                });
+
+            modelBuilder.Entity("Domain.Entities.UserEvent", b =>
+                {
+                    b.Property<string>("AppUserId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<Guid>("EventId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("DateJoined")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool>("IsHost")
+                        .HasColumnType("bit");
+
+                    b.HasKey("AppUserId", "EventId");
+
+                    b.HasIndex("EventId");
+
+                    b.ToTable("UserEvent");
+                });
+
             modelBuilder.Entity("IdentityServer4.EntityFramework.Entities.DeviceFlowCodes", b =>
                 {
                     b.Property<string>("UserCode")
@@ -99,105 +248,6 @@ namespace Infrastructure.Identity.Migrations
                     b.HasIndex("SubjectId", "ClientId", "Type");
 
                     b.ToTable("PersistedGrants");
-                });
-
-            modelBuilder.Entity("Infrastructure.Identity.AppUser", b =>
-                {
-                    b.Property<string>("Id")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<int>("AccessFailedCount")
-                        .HasColumnType("int");
-
-                    b.Property<string>("ConcurrencyStamp")
-                        .IsConcurrencyToken()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Email")
-                        .HasColumnType("nvarchar(256)")
-                        .HasMaxLength(256);
-
-                    b.Property<bool>("EmailConfirmed")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("LockoutEnabled")
-                        .HasColumnType("bit");
-
-                    b.Property<DateTimeOffset?>("LockoutEnd")
-                        .HasColumnType("datetimeoffset");
-
-                    b.Property<string>("NormalizedEmail")
-                        .HasColumnType("nvarchar(256)")
-                        .HasMaxLength(256);
-
-                    b.Property<string>("NormalizedUserName")
-                        .HasColumnType("nvarchar(256)")
-                        .HasMaxLength(256);
-
-                    b.Property<string>("PasswordHash")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("PhoneNumber")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<bool>("PhoneNumberConfirmed")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("SecurityStamp")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<bool>("TwoFactorEnabled")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("UserName")
-                        .HasColumnType("nvarchar(256)")
-                        .HasMaxLength(256);
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("NormalizedEmail")
-                        .HasName("EmailIndex");
-
-                    b.HasIndex("NormalizedUserName")
-                        .IsUnique()
-                        .HasName("UserNameIndex")
-                        .HasFilter("[NormalizedUserName] IS NOT NULL");
-
-                    b.ToTable("AspNetUsers");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = "e4acf16e-0afe-4c88-a15d-f29ddba3f1c9",
-                            AccessFailedCount = 0,
-                            ConcurrencyStamp = "288b0291-2144-4719-8a40-3d5db31b5b76",
-                            Email = "testUser1@test.com",
-                            EmailConfirmed = false,
-                            LockoutEnabled = false,
-                            NormalizedEmail = "TESTUSER1@TEST.COM",
-                            NormalizedUserName = "TESTUSER1",
-                            PasswordHash = "AQAAAAEAACcQAAAAEJWJ/llnpIVKdPwsH3FY6l/ia2p5+UfU0We70kNa07ShwQPT/joMOHrBSl6zydukTw==",
-                            PhoneNumberConfirmed = false,
-                            SecurityStamp = "5fbe5051-da61-4720-9818-bdefc8c0aa6b",
-                            TwoFactorEnabled = false,
-                            UserName = "testUser1"
-                        },
-                        new
-                        {
-                            Id = "a2440bb9-4531-41b4-9b54-6b619ecb2771",
-                            AccessFailedCount = 0,
-                            ConcurrencyStamp = "8e068a83-0f73-4d92-9969-cc37f7071e7c",
-                            Email = "testUser2@test.com",
-                            EmailConfirmed = false,
-                            LockoutEnabled = false,
-                            NormalizedEmail = "TESTUSER2@TEST.COM",
-                            NormalizedUserName = "TESTUSER2",
-                            PasswordHash = "AQAAAAEAACcQAAAAEF9S2s5EothLLWEQahQzW8aVOD88HyLdC3qMcJBwB5Bp1C0fJ6U+QTc+1HXMAM9Jjg==",
-                            PhoneNumberConfirmed = false,
-                            SecurityStamp = "74c1110a-3aa7-49ca-99c9-048fbec1003b",
-                            TwoFactorEnabled = false,
-                            UserName = "testUser2"
-                        });
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -335,6 +385,21 @@ namespace Infrastructure.Identity.Migrations
                     b.ToTable("AspNetUserTokens");
                 });
 
+            modelBuilder.Entity("Domain.Entities.UserEvent", b =>
+                {
+                    b.HasOne("Domain.Entities.AppUser", "AppUser")
+                        .WithMany("UserEvents")
+                        .HasForeignKey("AppUserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Domain.Entities.Event", "Event")
+                        .WithMany("UserEvents")
+                        .HasForeignKey("EventId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
                 {
                     b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole", null)
@@ -346,7 +411,7 @@ namespace Infrastructure.Identity.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<string>", b =>
                 {
-                    b.HasOne("Infrastructure.Identity.AppUser", null)
+                    b.HasOne("Domain.Entities.AppUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -355,7 +420,7 @@ namespace Infrastructure.Identity.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<string>", b =>
                 {
-                    b.HasOne("Infrastructure.Identity.AppUser", null)
+                    b.HasOne("Domain.Entities.AppUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -370,7 +435,7 @@ namespace Infrastructure.Identity.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Infrastructure.Identity.AppUser", null)
+                    b.HasOne("Domain.Entities.AppUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -379,7 +444,7 @@ namespace Infrastructure.Identity.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<string>", b =>
                 {
-                    b.HasOne("Infrastructure.Identity.AppUser", null)
+                    b.HasOne("Domain.Entities.AppUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
