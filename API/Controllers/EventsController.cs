@@ -2,8 +2,10 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Application.Common.Models.DTOs;
+using Application.Events.Commands.AttendEvent;
 using Application.Events.Commands.CreateEvent;
 using Application.Events.Commands.DeleteEvent;
+using Application.Events.Commands.UnAttendEvent;
 using Application.Events.Commands.UpdateEvent;
 using Application.Events.Queries.GetAllEventsList;
 using Application.Events.Queries.GetEvent;
@@ -52,6 +54,22 @@ namespace API.Controllers
         public async Task<ActionResult> DeleteEvent(Guid id)
         {
             await Mediator.Send(new DeleteEventCommand { Id = id });
+
+            return Ok();
+        }
+
+        [HttpPost("{id}/attendance")]
+        public async Task<ActionResult> AttendEvent(Guid id)
+        {
+            await Mediator.Send(new AttendEventCommand { Id = id });
+
+            return Ok();
+        }
+
+        [HttpDelete("{id}/attendance")]
+        public async Task<ActionResult> UnAttendEvent(Guid id)
+        {
+            await Mediator.Send(new UnAttendEventCommand { Id = id });
 
             return Ok();
         }
