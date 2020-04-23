@@ -1,11 +1,10 @@
 import { observable, action, computed, runInAction } from "mobx";
-import { SyntheticEvent } from "react";
 import agent from "../api/agent";
 import IEvent, { IEventFormValues } from "../models/eventModel";
 import { browserHistory } from "../..";
 import * as NavConstants from "../constants/navigationalConstants";
 import { RootStore } from "./rootStore";
-import { IUser } from "../models/userModels";
+import { mapFormValuesToEvent, setPropertiesForCurrentUser, createAttendee, createHost } from "../util/eventUtil";
 
 class EventStore {
   private readonly RootStore: RootStore;
@@ -54,7 +53,7 @@ class EventStore {
         events.forEach((event) => {
           event.date = event.date.split(".")[0];
 
-          this.setPropertiesForCurrentUser(event, currentUser!);
+          setPropertiesForCurrentUser(event, currentUser!);
 
           this.events.set(event.id, event);
           this.RootStore.CommonStore.isGlobalLoading = false;
@@ -87,7 +86,7 @@ class EventStore {
 
         event.date = event.date.split(".")[0];
 
-        this.setPropertiesForCurrentUser(event, currentUser!);
+        setPropertiesForCurrentUser(event, currentUser!);
 
         runInAction(() => {
           this.selectedEvent = event;
@@ -111,7 +110,11 @@ class EventStore {
     try {
       formValues.id = await agent.events.create(formValues);
 
-      const event = this.mapFormValuesToEvent(formValues);
+      const event = mapFormValuesToEvent(formValues);
+
+      event.attendees.push(createHost(this.RootStore.UserStore.user!));
+      event.isHost = true;
+      event.isAttending = true;
 
       runInAction(() => {
         this.events.set(event.id, event);
@@ -135,7 +138,13 @@ class EventStore {
     try {
       await agent.events.update(formValues);
 
-      const event = this.mapFormValuesToEvent(formValues);
+      const event = mapFormValuesToEvent(formValues);
+
+      if (this.selectedEvent) {
+        event.attendees = this.selectedEvent.attendees;
+        event.isHost = true;
+        event.isAttending = true;
+      }
 
       runInAction(() => {
         this.events.set(event.id, event);
@@ -153,8 +162,7 @@ class EventStore {
   };
 
   @action
-  deleteEvent = async (id: string, e: SyntheticEvent<HTMLButtonElement>) => {
-    this.RootStore.CommonStore.elementLoadingTarget = e.currentTarget.name;
+  deleteEvent = async (id: string) => {
     this.RootStore.CommonStore.isElementLoading = true;
 
     try {
@@ -162,14 +170,13 @@ class EventStore {
 
       runInAction(() => {
         this.events.delete(id);
-
         this.RootStore.CommonStore.isElementLoading = false;
-        this.RootStore.CommonStore.elementLoadingTarget = "";
+
+        browserHistory.push(NavConstants.EVENTS);
       });
     } catch (error) {
       runInAction(() => {
         this.RootStore.CommonStore.isElementLoading = false;
-        this.RootStore.CommonStore.elementLoadingTarget = "";
       });
     }
   };
@@ -177,22 +184,53 @@ class EventStore {
   @action
   unselectEvent = () => (this.selectedEvent = undefined);
 
-  mapFormValuesToEvent = (values: IEventFormValues): IEvent => ({
-    id: values.id,
-    title: values.title,
-    description: values.description,
-    category: values.category,
-    date: values.date,
-    city: values.city,
-    venue: values.venue,
-    attendees: [],
-    isHost: false,
-    isAttending: false,
-  });
+  @action
+  attendEvent = async (id: string) => {
+    const attendee = createAttendee(this.RootStore.UserStore.user!);
+    this.RootStore.CommonStore.isElementLoading = true;
 
-  setPropertiesForCurrentUser = (event: IEvent, user: IUser) => {
-    event.isHost = event.attendees.some((attendee) => attendee.username === user.username && attendee.isHost);
-    event.isAttending = event.attendees.some((attendee) => attendee.username === user.username);
+    try {
+      await agent.events.attend(id);
+
+      runInAction(() => {
+        if (this.selectedEvent) {
+          this.selectedEvent.attendees.push(attendee);
+          this.selectedEvent.isAttending = true;
+          this.events.set(this.selectedEvent.id, this.selectedEvent);
+        }
+
+        this.RootStore.CommonStore.isElementLoading = false;
+      });
+    } catch (error) {
+      runInAction(() => {
+        this.RootStore.CommonStore.isElementLoading = false;
+      });
+    }
+  };
+
+  @action
+  unAttendEvent = async (id: string) => {
+    this.RootStore.CommonStore.isElementLoading = true;
+
+    try {
+      await agent.events.unAttend(id);
+
+      runInAction(() => {
+        if (this.selectedEvent) {
+          this.selectedEvent.attendees = this.selectedEvent.attendees.filter(
+            (attendee) => attendee.username !== this.RootStore.UserStore.user?.username
+          );
+          this.selectedEvent.isAttending = false;
+          this.events.set(this.selectedEvent.id, this.selectedEvent);
+        }
+
+        this.RootStore.CommonStore.isElementLoading = false;
+      });
+    } catch (error) {
+      runInAction(() => {
+        this.RootStore.CommonStore.isElementLoading = false;
+      });
+    }
   };
 }
 

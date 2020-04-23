@@ -55,6 +55,8 @@ const events = {
   create: (event: IEventFormValues): Promise<string> => requests.post(NavConstants.EVENTS, event),
   update: (event: IEventFormValues) => requests.put(`${NavConstants.EVENTS}/${event.id}`, event),
   delete: (id: string) => requests.delete(`${NavConstants.EVENTS}/${id}`),
+  attend: (id: string) => requests.post(`${NavConstants.EVENTS}/${id}/attendance`, {}),
+  unAttend: (id: string) => requests.delete(`${NavConstants.EVENTS}/${id}/attendance`),
 };
 
 const users = {

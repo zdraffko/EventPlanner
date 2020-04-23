@@ -1,6 +1,7 @@
 import React from "react";
 import { Segment, Grid, Icon } from "semantic-ui-react";
 import IEvent from "../../../models/eventModel";
+import { observer } from "mobx-react-lite";
 
 interface IProps {
   event: IEvent;
@@ -43,4 +44,4 @@ const EventDetailsInfo: React.FC<IProps> = ({ event }) => (
   </Segment.Group>
 );
 
-export default EventDetailsInfo;
+export default observer(EventDetailsInfo);

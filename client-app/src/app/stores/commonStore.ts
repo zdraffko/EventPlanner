@@ -10,9 +10,6 @@ class CommonStore {
   isElementLoading = false;
 
   @observable
-  elementLoadingTarget = "";
-
-  @observable
   token: string | null = window.localStorage.getItem(tokenName);
 
   @observable.shallow
