@@ -9,6 +9,7 @@ using Application.Events.Commands.UnAttendEvent;
 using Application.Events.Commands.UpdateEvent;
 using Application.Events.Queries.GetAllEventsList;
 using Application.Events.Queries.GetEvent;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http.Extensions;
 using Microsoft.AspNetCore.Mvc;
 
@@ -40,6 +41,7 @@ namespace API.Controllers
             return Created(new Uri($"{Request.GetEncodedUrl()}/{eventId}"), eventId);
         }
 
+        [Authorize("IsEventHost")]
         [HttpPut("{id}")]
         public async Task<ActionResult> UpdateEvent(Guid id, UpdateEventCommand command)
         {
@@ -50,6 +52,7 @@ namespace API.Controllers
             return Ok();
         }
 
+        [Authorize("IsEventHost")]
         [HttpDelete("{id}")]
         public async Task<ActionResult> DeleteEvent(Guid id)
         {

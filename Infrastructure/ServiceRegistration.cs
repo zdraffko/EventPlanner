@@ -2,7 +2,9 @@
 using Application.Common.Interfaces;
 using Domain.Entities;
 using Infrastructure.Identity;
+using Infrastructure.Identity.Policies.IsEventHost;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -39,6 +41,11 @@ namespace Infrastructure
                         ValidateIssuer = false,
                         ValidateAudience = false
                     });
+
+            services.AddAuthorization(options => options.AddPolicy("IsEventHost",
+                    policyConfig => policyConfig.Requirements.Add(new IsEventHostRequirement())
+                ))
+                .AddTransient<IAuthorizationHandler, IsEventHostHandler>();
 
             return services;
         }
