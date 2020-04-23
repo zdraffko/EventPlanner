@@ -1,5 +1,5 @@
 import axios, { AxiosResponse, AxiosError } from "axios";
-import IEvent from "../models/eventModel";
+import IEvent, { IEventFormValues } from "../models/eventModel";
 import { browserHistory } from "../..";
 import * as NavConstants from "../constants/navigationalConstants";
 import { IUserLogInFormValues, IUser, IUserRegisterFormValues } from "../models/userModels";
@@ -52,8 +52,8 @@ const requests = {
 const events = {
   getAll: (): Promise<IEvent[]> => requests.get(NavConstants.EVENTS),
   getEvent: (id: string): Promise<IEvent> => requests.get(`${NavConstants.EVENTS}/${id}`),
-  create: (event: IEvent): Promise<string> => requests.post(NavConstants.EVENTS, event),
-  update: (event: IEvent) => requests.put(`${NavConstants.EVENTS}/${event.id}`, event),
+  create: (event: IEventFormValues): Promise<string> => requests.post(NavConstants.EVENTS, event),
+  update: (event: IEventFormValues) => requests.put(`${NavConstants.EVENTS}/${event.id}`, event),
   delete: (id: string) => requests.delete(`${NavConstants.EVENTS}/${id}`),
 };
 

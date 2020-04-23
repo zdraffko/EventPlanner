@@ -1,10 +1,11 @@
 import { observable, action, computed, runInAction } from "mobx";
 import { SyntheticEvent } from "react";
 import agent from "../api/agent";
-import IEvent from "../models/eventModel";
+import IEvent, { IEventFormValues } from "../models/eventModel";
 import { browserHistory } from "../..";
 import * as NavConstants from "../constants/navigationalConstants";
 import { RootStore } from "./rootStore";
+import { IUser } from "../models/userModels";
 
 class EventStore {
   private readonly RootStore: RootStore;
@@ -44,6 +45,7 @@ class EventStore {
   @action
   loadAllEvents = async () => {
     this.RootStore.CommonStore.isGlobalLoading = true;
+    const currentUser = this.RootStore.UserStore.user;
 
     try {
       const events = await agent.events.getAll();
@@ -51,6 +53,9 @@ class EventStore {
       runInAction(() => {
         events.forEach((event) => {
           event.date = event.date.split(".")[0];
+
+          this.setPropertiesForCurrentUser(event, currentUser!);
+
           this.events.set(event.id, event);
           this.RootStore.CommonStore.isGlobalLoading = false;
         });
@@ -65,6 +70,8 @@ class EventStore {
   @action
   loadEvent = async (id: string) => {
     this.RootStore.CommonStore.isGlobalLoading = true;
+    const currentUser = this.RootStore.UserStore.user;
+
     let event = this.events.get(id);
 
     if (event) {
@@ -79,6 +86,9 @@ class EventStore {
         event = await agent.events.getEvent(id);
 
         event.date = event.date.split(".")[0];
+
+        this.setPropertiesForCurrentUser(event, currentUser!);
+
         runInAction(() => {
           this.selectedEvent = event;
           this.events.set(event!.id, event!);
@@ -95,11 +105,13 @@ class EventStore {
   };
 
   @action
-  createEvent = async (event: IEvent) => {
+  createEvent = async (formValues: IEventFormValues) => {
     this.RootStore.CommonStore.isElementLoading = true;
 
     try {
-      event.id = await agent.events.create(event);
+      formValues.id = await agent.events.create(formValues);
+
+      const event = this.mapFormValuesToEvent(formValues);
 
       runInAction(() => {
         this.events.set(event.id, event);
@@ -117,11 +129,13 @@ class EventStore {
   };
 
   @action
-  updateEvent = async (event: IEvent) => {
+  updateEvent = async (formValues: IEventFormValues) => {
     this.RootStore.CommonStore.isElementLoading = true;
 
     try {
-      await agent.events.update(event);
+      await agent.events.update(formValues);
+
+      const event = this.mapFormValuesToEvent(formValues);
 
       runInAction(() => {
         this.events.set(event.id, event);
@@ -162,6 +176,24 @@ class EventStore {
 
   @action
   unselectEvent = () => (this.selectedEvent = undefined);
+
+  mapFormValuesToEvent = (values: IEventFormValues): IEvent => ({
+    id: values.id,
+    title: values.title,
+    description: values.description,
+    category: values.category,
+    date: values.date,
+    city: values.city,
+    venue: values.venue,
+    attendees: [],
+    isHost: false,
+    isAttending: false,
+  });
+
+  setPropertiesForCurrentUser = (event: IEvent, user: IUser) => {
+    event.isHost = event.attendees.some((attendee) => attendee.username === user.username && attendee.isHost);
+    event.isAttending = event.attendees.some((attendee) => attendee.username === user.username);
+  };
 }
 
 export default EventStore;

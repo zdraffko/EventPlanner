@@ -1,12 +1,12 @@
 import { useCallback, useContext } from "react";
 import * as YupValidator from "yup";
-import IEvent from "../models/eventModel";
+import IEvent, { IEventFormValues } from "../models/eventModel";
 import { RootStoreContext } from "../stores/rootStore";
 
 const useEventForm = () => {
   const { createEvent, updateEvent } = useContext(RootStoreContext).EventStore;
 
-  class FormValues implements IEvent {
+  class FormValues implements IEventFormValues {
     constructor(values?: IEvent) {
       Object.assign(this, values);
     }
@@ -39,7 +39,7 @@ const useEventForm = () => {
   });
 
   const handleFormSubmit = useCallback(
-    (event: IEvent) => {
+    (event: IEventFormValues) => {
       if (event.id) {
         updateEvent(event);
       } else {

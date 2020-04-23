@@ -31,14 +31,10 @@ const EventDetailsHeader: React.FC<IProps> = ({ event }) => (
         <Item.Group>
           <Item>
             <Item.Content>
-              <Header
-                size="huge"
-                content={event.title}
-                style={{ color: "white" }}
-              />
+              <Header size="huge" content={event.title} style={{ color: "white" }} />
               <p>{event.date}</p>
               <p>
-                Organized by <strong>User</strong>
+                Hosted by <strong>{event.attendees.find((attendee) => attendee.isHost)?.username}</strong>
               </p>
             </Item.Content>
           </Item>
@@ -46,16 +42,15 @@ const EventDetailsHeader: React.FC<IProps> = ({ event }) => (
       </Segment>
     </Segment>
     <Segment clearing attached="bottom">
-      <Button color="teal">Join Event</Button>
-      <Button>Cancel attendance</Button>
-      <Button
-        as={Link}
-        to={`/update/${event.id}`}
-        color="orange"
-        floated="right"
-      >
-        Manage Event
-      </Button>
+      {event.isHost ? (
+        <Button as={Link} to={`/update/${event.id}`} color="orange" floated="right">
+          Manage Event
+        </Button>
+      ) : event.isAttending ? (
+        <Button>Cancel attendance</Button>
+      ) : (
+        <Button color="teal">Join Event</Button>
+      )}
     </Segment>
   </Segment.Group>
 );
